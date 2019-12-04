@@ -32,6 +32,7 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
 6. Run the installation script.
     - `cd prg-s02-system-setup`
     - `./install_nuc.sh`
+    - If prompted for teamviewer configuration file setup, enter Y.
     - If prompted for update Ubuntu, do not.
     - Check for errors, but don't worry about the error about unable to find /dev/video0 when starting USB_CAM docker container.
 
