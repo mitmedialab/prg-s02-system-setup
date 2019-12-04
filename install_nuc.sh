@@ -5,7 +5,7 @@ source s02-machine-commands.sh
 
 echo
 echo -e "${G}Set user to execute sudo commands without password${N}"
-line='prg ALL=(ALL) NOPASSWD: ALL'
+line="$USER ALL=(ALL) NOPASSWD: ALL"
 sudo grep -qxF "$line" /etc/sudoers || sudo sed -i '27i '"$line"'' /etc/sudoers  &&
 echo "OK"
 
@@ -108,6 +108,13 @@ sudo docker swarm join --token SWMTKN-1-4qtr77cbney2t4f81rj7qlz61fq78l4wyv3infn4
 #sudo docker run -d -it --restart=unless-stopped --device=/dev/snd:/dev/snd \
 #         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers \
 #         $ROS_IMAGE_ID python3.6 -m scripts.utils_scripts.start_mic_launcher.py 
+
+echo
+echo -e "${G}Add User to Docker group${N}"
+sudo groupadd docker &&
+sudo gpasswd -a $USER docker &&
+newgrp docker &&  docker ps &&
+echo "OK"
 
 echo
 echo -e "${G}Install and Log-in to TeamViewer${N}"
