@@ -4,7 +4,11 @@
 
 The following instruction assumes you have a bootable Ubuntu intallation USB thumbdrive.
 
-1. Insert the intalltion USB thumbdrive.
+1. Connect NUC.
+    - Insert the intallation USB thumbdrive.
+    - Connect monitor, mouse, and keyboard.
+    - **Connect ethernet cable**: we'll get internet this way. Otherwise, connect to WiFi other than "PRG-MIT" during Ubuntu installation.
+    - Connect power cable.
 
 2. Power on NUC.
 
@@ -16,22 +20,29 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
 4. Install Ubuntu. We use 16.04 LTS desktop image built for NUCs.
     - Settings
       - User Name: prg
-      - Computer name:  as in the sticker, e.g., s02-n01-nuc-01
+      - Computer name:  as in the lable on the NUC, e.g., s02-n01-nuc-01
       - Password: (ask Hae Won)
+      - Select Login Automatically.
+    - If you're connected via ethernet, skip wifi connection. If not, **connect to any other than "PRG-MIT"**
+ 
+5. Clone this repo.
+    - `sudo apt install -y git`
+    - `git clone https://github.com/mitmedialab/prg-s02-system-setup`
 
-5. Run the installation script.
+6. Run the installation script.
+    - `cd prg-s02-system-setup`
     - `./install_nuc.sh`
     - If prompted for update Ubuntu, do not.
     - Check for errors, but don't worry about the error about unable to find /dev/video0 when starting USB_CAM docker container.
 
-6. Setup TeamViewer
+7. Setup TeamViewer
     - `sudo teamviewer setup`
       - ID: robots.deployment@gmail.com
       - Password: (ask Hae Won)
     - **Don't forget to check email to add the NUC as trusted device.** If you don't do this, you won't be able to log in.
     - Given an option, select 'y' to add the NUC to the account.
 
-7. Test
+8. Test
     - Test ssh into the new NUC from another machine on the same Network.
 
 
