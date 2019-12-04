@@ -22,6 +22,7 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
       - User Name: prg
       - Computer name:  as in the lable on the NUC, e.g., s02-n01-nuc-01
       - Password: (ask Hae Won)
+      - Select Login Automatically.
     - When prompted to connect to a WiFi, **connect to any other than "PRG-MIT"**
  
 5. Clone this repo.
