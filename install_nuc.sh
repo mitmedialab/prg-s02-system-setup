@@ -122,6 +122,7 @@ echo -e "${G}Copy the following computer hostname and wlan MAC address to the pr
 echo -e "${G}If the hostname is not in \"s02-nXX-nux-YY\" format, change it in /etc/hostname${N}"
 cat /etc/hostname
 ifconfig wlp58s0 2>/dev/null|awk '/HWaddr/ {print $5}'
+ifconfig eno1 2>/dev/null|awk '/HWaddr/ {print $5}'
 xdg-open https://docs.google.com/spreadsheets/d/1LyPBXvrFj7XT9vVZTdyXslW371ttndbsb-SnG8kh-2M/edit?usp=sharing
 
 echo
