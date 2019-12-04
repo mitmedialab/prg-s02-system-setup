@@ -5,19 +5,22 @@ source s02-machine-commands.sh
 
 echo
 echo -e "${G}Set user to execute sudo commands without password${N}"
-sudo sed -i '27i prg ALL=(ALL) NOPASSWD: ALL' /etc/sudoers  &&
+line='prg ALL=(ALL) NOPASSWD: ALL'
+sudo grep -qxF "$line" /etc/sudoers || sudo sed -i '27i '"$line"'' /etc/sudoers  &&
 echo "OK"
 
 echo
 echo -e "${G}Set default MIC source to MXL AC404${N}"
 MIC_NAME=`pactl list short sources | grep USB_audio_CODEC | grep alsa_input | awk '{print $2}'`
-sudo sed -i "/set-default-source/a\set-default-source $MIC_NAME" /etc/pulse/default.pa  &&
+line="set-default-source $MIC_NAME"
+sudo grep -qxF "$line" /etc/pulse/default.pa || sudo sed -i '/set-default-source/a\'"$line"'' /etc/pulse/default.pa  &&
 echo "OK"
 
 echo
 echo -e "${G}Setup Jibo Audio Streaming Script${N}"
 sudo cp jibo-audio-streaming-receiver.sh  /usr/local/bin/
-sudo sed -i '$i \/usr/local/bin/jibo-audio-streaming-receiver.sh &\n' /etc/rc.local &&
+line="/usr/local/bin/jibo-audio-streaming-receiver.sh &"
+sudo grep -qxF "$line" /etc/rc.local || sudo sed -i '$i \'"$line"'\n' /etc/rc.local
 echo "OK"
 
 echo
@@ -30,13 +33,13 @@ echo
 echo -e "${G}Add ssh keys${N}"
    mkdir -p ~/.ssh
    echo "adding haewon's ssh key"
-   echo "$haewons_ssh_key" >> ~/.ssh/authorized_keys
+   sudo grep -qxF "$haewons_ssh_key" ~/.ssh/authorized_keys || echo "$haewons_ssh_key" >> ~/.ssh/authorized_keys
    echo "adding brayden's ssh key"
-   echo "$braydens_ssh_key" >> ~/.ssh/authorized_keys
+   sudo grep -qxF "$braydens_ssh_key" ~/.ssh/authorized_keys || echo "$braydens_ssh_key" >> ~/.ssh/authorized_keys
    echo "adding sam's ssh key"
-   echo "$sams_ssh_key" >> ~/.ssh/authorized_keys
+   sudo grep -qxF "$sams_ssh_key" ~/.ssh/authorized_keys || echo "$sams_ssh_key" >> ~/.ssh/authorized_keys
    echo "adding jon's ssh key"
-   echo "$jons_ssh_key" >> ~/.ssh/authorized_keys
+   sudo grep -qxF "$jons_ssh_key" ~/.ssh/authorized_keys || echo "$jons_ssh_key" >> ~/.ssh/authorized_keys
 
 echo
 echo -e "${G}apt-get update${N}"
@@ -92,7 +95,7 @@ echo -e "${G}Join Docker Swarm${N}"
 sudo docker swarm join --token SWMTKN-1-4qtr77cbney2t4f81rj7qlz61fq78l4wyv3infn4d5lz1ct1g1-4ryfnlja84ovm2da412rk0xe2 18.27.79.165:2377 &&
 
 echo
-echo -e "${G}Run local Docker Containers${N}"
+echo -e "${G}Run USB_CAM Docker Container${N}"
 #sudo docker login &&
 #sudo docker run -it -p 554:554 -p 7888:7888 -p 8777:8777 -p 37777:37777 -p 37778:37778 mitprg/s02-literacy-ga:first &&
 ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
@@ -112,7 +115,7 @@ sudo sh -c 'echo "deb http://linux.teamviewer.com/deb stable main" >> /etc/apt/s
 sudo apt update &&
 sudo apt install -y teamviewer &&
 #teamviewer &
-sudo teamviewer setup
+#sudo teamviewer setup
 
 echo
 echo -e "${G}Copy the following computer hostname and wlan MAC address to the provided URL${N}"
@@ -122,4 +125,4 @@ ifconfig wlp58s0 2>/dev/null|awk '/HWaddr/ {print $5}'
 xdg-open https://docs.google.com/spreadsheets/d/1LyPBXvrFj7XT9vVZTdyXslW371ttndbsb-SnG8kh-2M/edit?usp=sharing
 
 echo
-echo "done."
+echo "Done. Now run 'sudo teamviewer setup'. Don't forget to check email for verification."
