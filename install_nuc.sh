@@ -6,37 +6,37 @@ source s02-machine-commands.sh
 echo
 echo -e "${G}Set user to execute sudo commands without password${N}"
 sudo sed -i '27i prg ALL=(ALL) NOPASSWD: ALL' /etc/sudoers  &&
+echo "OK"
 
 echo
 echo -e "${G}Set default MIC source to MXL AC404${N}"
 MIC_NAME=`pactl list short sources | grep USB_audio_CODEC | grep alsa_input | awk '{print $2}'`
-sudo sed -i '/set-default-source/a\set-default-source $MIC_NAME' /etc/pulse/default.pa  &&
+sudo sed -i "/set-default-source/a\set-default-source $MIC_NAME" /etc/pulse/default.pa  &&
+echo "OK"
 
 echo
 echo -e "${G}Setup Jibo Audio Streaming Script${N}"
 sudo cp jibo-audio-streaming-receiver.sh  /usr/local/bin/
-sudo sed -i '/exit 0/i\/usr/local/bin/jibo-audio-streaming-receiver.sh &\n' /etc/rc.local
+sudo sed -i '$i \/usr/local/bin/jibo-audio-streaming-receiver.sh &\n' /etc/rc.local &&
+echo "OK"
 
 echo
-echo -e "Setup PRG-MIT WiFi"
+echo -e "${G}Setup PRG-MIT WiFi${N}"
 sudo cp PRG-MIT /etc/NetworkManager/system-connections/
-sudo chmod 600 /etc/NetworkManager/system-connections/PRG-MIT
+sudo chmod 600 /etc/NetworkManager/system-connections/PRG-MIT &&
+echo "OK"
 
 echo
-echo -e "Add ssh keys"
+echo -e "${G}Add ssh keys${N}"
+   mkdir -p ~/.ssh
    echo "adding haewon's ssh key"
-   echo "$haewons_ssh_key" > /tmp/additional_key.pub
-   ssh-copy-id -f -i /tmp/additional_key
+   echo "$haewons_ssh_key" >> ~/.ssh/authorized_keys
    echo "adding brayden's ssh key"
-   echo "$braydens_ssh_key" > /tmp/additional_key.pub
-   ssh-copy-id -f -i /tmp/additional_key
+   echo "$braydens_ssh_key" >> ~/.ssh/authorized_keys
    echo "adding sam's ssh key"
-   echo "$sams_ssh_key" > /tmp/additional_key.pub
-   ssh-copy-id -f -i /tmp/additional_key
+   echo "$sams_ssh_key" >> ~/.ssh/authorized_keys
    echo "adding jon's ssh key"
-   echo "$jons_ssh_key" > /tmp/additional_key.pub
-   ssh-copy-id -f -i /tmp/additional_key
-   rm /tmp/additional_key
+   echo "$jons_ssh_key" >> ~/.ssh/authorized_keys
 
 echo
 echo -e "${G}apt-get update${N}"
@@ -95,10 +95,10 @@ echo
 echo -e "${G}Run local Docker Containers${N}"
 #sudo docker login &&
 #sudo docker run -it -p 554:554 -p 7888:7888 -p 8777:8777 -p 37777:37777 -p 37778:37778 mitprg/s02-literacy-ga:first &&
-ROS_IMAGE_ID=`docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
+ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
 sudo docker run -d -it --restart=unless-stopped --device=/dev/video0:/dev/video0 \
-         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers \
-         $ROS_IMAGE_ID python3.6 -m scripts.utils_scripts.start_usb_cam_launcher.py 
+         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers --name=usb_cam_launcher\
+         $ROS_IMAGE_ID python3.6 -m scripts.utils_scripts.start_usb_cam_launcher.py &&
 
 #sudo docker run -d -it --restart=unless-stopped --device=/dev/snd:/dev/snd \
 #         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers \
@@ -111,7 +111,8 @@ sudo apt-key add TeamViewer2017.asc &&
 sudo sh -c 'echo "deb http://linux.teamviewer.com/deb stable main" >> /etc/apt/sources.list.d/teamviewer.list' &&
 sudo apt update &&
 sudo apt install -y teamviewer &&
-teamviewer
+#teamviewer &
+sudo teamviewer setup
 
 echo
 echo -e "${G}Copy the following computer hostname and wlan MAC address to the provided URL${N}"

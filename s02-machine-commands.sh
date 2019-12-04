@@ -215,13 +215,13 @@ ask_to_reboot_jibo() {
     esac
 }
 
-for i in ${!n02_addr[@]}; do
-  nuc_ip_addr=${n02_addr[$i]}
-  echo $i, $nuc_ip_addr
-  #install_prg_ssh_keys
-  #ssh_nuc ls 
-  #required_ssid="PRG-MIT-8"
-  #setup_wifi
-  setup_jibo_audio_streaming
-done
+#for i in ${!n02_addr[@]}; do
+#  nuc_ip_addr=${n02_addr[$i]}
+#  echo $i, $nuc_ip_addr
+#  #install_prg_ssh_keys
+#  #ssh_nuc ls 
+#  #required_ssid="PRG-MIT-8"
+#  #setup_wifi
+#  setup_jibo_audio_streaming
+#done
 
