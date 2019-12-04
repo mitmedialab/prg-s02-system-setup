@@ -96,9 +96,9 @@ echo -e "${G}Run local Docker Containers${N}"
 #sudo docker login &&
 #sudo docker run -it -p 554:554 -p 7888:7888 -p 8777:8777 -p 37777:37777 -p 37778:37778 mitprg/s02-literacy-ga:first &&
 ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
-sudo docker run -d -it --restart=unless-stopped --device=/dev/video0:/dev/video0 \
-         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers --name=usb_cam_launcher\
-         $ROS_IMAGE_ID python3.6 -m scripts.utils_scripts.start_usb_cam_launcher.py &&
+sudo docker run -d -it --restart=always --device=/dev/video0:/dev/video0 \
+         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers --name=usb_cam \
+         $ROS_IMAGE_ID python3.6 -m scripts.utils_scripts.start_usb_cam_launcher &&
 
 #sudo docker run -d -it --restart=unless-stopped --device=/dev/snd:/dev/snd \
 #         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers \
