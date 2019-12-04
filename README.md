@@ -23,9 +23,10 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
       - Computer name:  as in the lable on the NUC, e.g., s02-n01-nuc-01
       - Password: (ask Hae Won)
       - Select Login Automatically.
-    - When prompted to connect to a WiFi, **connect to any other than "PRG-MIT"**
+    - If you're connected via ethernet, skip wifi connection. If not, **connect to any other than "PRG-MIT"**
  
 5. Clone this repo.
+    - `sudo apt install -y git`
     - `git clone https://github.com/mitmedialab/prg-s02-system-setup`
 
 6. Run the installation script.
