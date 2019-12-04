@@ -7,7 +7,7 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
 1. Connect NUC.
     - Insert the intallation USB thumbdrive.
     - Connect monitor, mouse, and keyboard.
-    - **Connect ethernet cable**: we'll get internet this way. Otherwise, connect to WiFi other than "PRG-MIT"
+    - **Connect ethernet cable**: we'll get internet this way. Otherwise, connect to WiFi other than "PRG-MIT" during Ubuntu installation.
     - Connect power cable.
 
 2. Power on NUC.
