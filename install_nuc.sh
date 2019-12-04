@@ -48,7 +48,7 @@ sudo apt-get update &&
 
 echo
 echo -e "${G}install packages${N}"
-sudo apt-get -y install vim-gtk-py2 apt-transport-https ca-certificates curl gnupg-agent software-properties-common &&
+sudo apt-get -y install vim-gnome apt-transport-https ca-certificates curl gnupg-agent software-properties-common &&
 
 echo
 echo -e "${G}Add Docker's official GPG key${N}"
