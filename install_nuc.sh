@@ -113,8 +113,6 @@ echo
 echo -e "${G}Add User to Docker group${N}"
 sudo groupadd docker
 sudo gpasswd -a $USER docker
-newgrp docker
-docker ps 
 echo "OK"
 
 echo
