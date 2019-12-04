@@ -9,12 +9,13 @@ line='prg ALL=(ALL) NOPASSWD: ALL'
 sudo grep -qxF "$line" /etc/sudoers || sudo sed -i '27i '"$line"'' /etc/sudoers  &&
 echo "OK"
 
-echo
-echo -e "${G}Set default MIC source to MXL AC404${N}"
-MIC_NAME=`pactl list short sources | grep USB_audio_CODEC | grep alsa_input | awk '{print $2}'`
-line="set-default-source $MIC_NAME"
-sudo grep -qxF "$line" /etc/pulse/default.pa || sudo sed -i '/set-default-source/a\'"$line"'' /etc/pulse/default.pa  &&
-echo "OK"
+# todo: Run after station assemnly.
+# echo
+# echo -e "${G}Set default MIC source to MXL AC404${N}"
+# MIC_NAME=`pactl list short sources | grep USB_audio_CODEC | grep alsa_input | awk '{print $2}'`
+# line="set-default-source $MIC_NAME"
+# sudo grep -qxF "$line" /etc/pulse/default.pa || sudo sed -i '/#set-default-source/a\'"$line"'' /etc/pulse/default.pa  &&
+# echo "OK"
 
 echo
 echo -e "${G}Setup Jibo Audio Streaming Script${N}"
@@ -94,14 +95,15 @@ echo
 echo -e "${G}Join Docker Swarm${N}"
 sudo docker swarm join --token SWMTKN-1-4qtr77cbney2t4f81rj7qlz61fq78l4wyv3infn4d5lz1ct1g1-4ryfnlja84ovm2da412rk0xe2 18.27.79.165:2377 &&
 
-echo
-echo -e "${G}Run USB_CAM Docker Container${N}"
-#sudo docker login &&
-#sudo docker run -it -p 554:554 -p 7888:7888 -p 8777:8777 -p 37777:37777 -p 37778:37778 mitprg/s02-literacy-ga:first &&
-ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
-sudo docker run -d -it --restart=always --device=/dev/video0:/dev/video0 \
-         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers --name=usb_cam \
-         $ROS_IMAGE_ID python3.6 -m scripts.utils_scripts.start_usb_cam_launcher &&
+# todo: Run after station assemnly.
+# echo
+# echo -e "${G}Run USB_CAM Docker Container${N}"
+# #sudo docker login &&
+# #sudo docker run -it -p 554:554 -p 7888:7888 -p 8777:8777 -p 37777:37777 -p 37778:37778 mitprg/s02-literacy-ga:first &&
+# ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
+# sudo docker run -d -it --restart=always --device=/dev/video0:/dev/video0 \
+#          --network=host --workdir=/root/catkin_ws/src/unity-game-controllers --name=usb_cam \
+#          $ROS_IMAGE_ID python3.6 -m scripts.utils_scripts.start_usb_cam_launcher &&
 
 #sudo docker run -d -it --restart=unless-stopped --device=/dev/snd:/dev/snd \
 #         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers \
