@@ -116,6 +116,11 @@ sudo gpasswd -a $USER docker
 echo "OK"
 
 echo
+echo -e "${G}Create Rosbag Data Tardis folder${N}"
+mkdir -p ~/rosbags/data-tardis
+echo "OK"
+
+echo
 echo -e "${G}Install and Log-in to TeamViewer${N}"
 wget https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc &&
 sudo apt-key add TeamViewer2017.asc &&
