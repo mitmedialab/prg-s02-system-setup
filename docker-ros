@@ -1,0 +1,6 @@
+#!/bin/bash
+rosContainer="/s02-ros_rosbridge"
+dID=`docker ps -qf "name=^$rosContainer" 2>/dev/null`
+echo $dID
+
+docker exec -it $dID /ros_catkin_entrypoint.sh $@
