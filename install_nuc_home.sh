@@ -1,7 +1,7 @@
 G='\033[0;32m'
 N='\033[0m'
 
-source s02-machine-commands.sh
+source src/s02-machine-commands.sh
 
 echo
 echo -e "${G}Set user to execute sudo commands without password${N}"
@@ -19,7 +19,7 @@ echo "OK"
 
 echo
 echo -e "${G}Setup Jibo Audio Streaming Script${N}"
-sudo cp jibo-audio-streaming-receiver.sh  /usr/local/bin/
+sudo cp src/jibo-audio-streaming-receiver.sh  /usr/local/bin/
 # line="/usr/local/bin/jibo-audio-streaming-receiver.sh &"
 # sudo grep -qxF "$line" /etc/rc.local || sudo sed -i '$i \'"$line"'\n' /etc/rc.local
 echo "OK"
@@ -33,7 +33,7 @@ echo "OK"
 
 echo
 echo -e "${G}Setup PRG-MIT WiFi${N}"
-sudo cp PRG-MIT /etc/NetworkManager/system-connections/
+sudo cp src/PRG-MIT /etc/NetworkManager/system-connections/
 sudo chmod 600 /etc/NetworkManager/system-connections/PRG-MIT &&
 echo "OK"
 
@@ -56,6 +56,23 @@ sudo apt-get update &&
 echo
 echo -e "${G}install packages${N}"
 sudo apt-get -y install vim-gnome apt-transport-https ca-certificates curl gnupg-agent software-properties-common &&
+
+#echo
+#echo -e "${G}Install packages${N}"
+#sudo apt-get -y install gnome-tweak-tool
+
+echo
+echo -e "${G}Install openssh-server${N}"
+sudo apt-get -y install openssh-server &&
+sudo systemctl enable ssh
+sudo systemctl start ssh
+
+echo
+echo -e "${G}Install low version Chromium for Jibo Console${N}"
+wget http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/629479/chrome-linux.zip -P ~/ &&
+unzip ~/chrome-linux.zip -d ~/chrome-linux &&
+cp src/JiboChromium.desktop ~/Desktop &&
+echo "OK"
 
 echo
 echo -e "${G}Create Rosbag Data Tardis folder${N}"
@@ -94,16 +111,6 @@ echo
 echo -e "${G}Verify Docker Compose is successfully installed${N}"
 docker-compose --version
 
-#echo
-#echo -e "${G}Install packages${N}"
-#sudo apt-get -y install gnome-tweak-tool
-
-echo
-echo -e "${G}Install openssh-server${N}"
-sudo apt-get -y install openssh-server &&
-sudo systemctl enable ssh
-sudo systemctl start ssh
-
 echo
 echo -e "${G}Join Docker Swarm${N}"
 #sudo docker swarm join --token SWMTKN-1-4qtr77cbney2t4f81rj7qlz61fq78l4wyv3infn4d5lz1ct1g1-4ryfnlja84ovm2da412rk0xe2 18.27.79.165:2377 &&
@@ -113,7 +120,7 @@ echo
 echo -e "${G}Add User to Docker group${N}"
 sudo groupadd docker
 sudo gpasswd -a $USER docker
-newgrp docker
+# newgrp docker # if you do this, it will exit out to terminal. So don't do it.
 sleep 1s
 mkdir -p /home/prg/.docker &&
 sudo chown prg:prg /home/prg/.docker -R &&
@@ -122,8 +129,8 @@ echo "OK"
 
 echo
 echo -e "${G}Add Docker Monitor Script${N}"
-sudo cp s02-docker_monitor /usr/local/bin/ &&
-sudo cp docker-ros /usr/local/bin/ &&
+sudo cp src/s02-docker_monitor /usr/local/bin/ &&
+sudo cp src/docker-ros /usr/local/bin/ &&
 echo "OK"
 
 echo
@@ -142,7 +149,8 @@ echo -e "${G}If the hostname is not in \"s02-nXX-nux-YY\" format, change it in /
 cat /etc/hostname
 ifconfig wlp58s0 2>/dev/null|awk '/HWaddr/ {print $5}'
 ifconfig eno1 2>/dev/null|awk '/HWaddr/ {print $5}'
-xdg-open https://docs.google.com/spreadsheets/d/1LyPBXvrFj7XT9vVZTdyXslW371ttndbsb-SnG8kh-2M/edit?usp=sharing
+#xdg-open https://docs.google.com/spreadsheets/d/1LyPBXvrFj7XT9vVZTdyXslW371ttndbsb-SnG8kh-2M/edit?usp=sharing # KIPP LIST
+xdg-open https://docs.google.com/spreadsheets/d/135a5wF63Tt_AUOSR7NvoM1jeysmoccADIUxwsIcF2c0/edit?usp=sharing  #HOME LIST
 
 echo
 echo "Done. Now run 'sudo teamviewer setup' on another terminal. Don't forget to check email for verification."
@@ -154,11 +162,13 @@ echo
 echo -e "${G}Run USB_CAM Docker Container${N}"
 #sudo docker login &&
 #sudo docker run -it -p 554:554 -p 7888:7888 -p 8777:8777 -p 37777:37777 -p 37778:37778 mitprg/s02-literacy-ga:first &&
-ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle:mergetest --format "{{.ID}}"`
+ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
+ROS_IMAGE_ID=`echo $ROS_IMAGE_ID | awk '{print $1}'`
 while [ -z "$ROS_IMAGE_ID" ]; do
   echo "Waiting for docker image to finish download..."
   sleep 10s
-  ROS_IMAGE_ID=`docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle:mergetest --format "{{.ID}}"`
+  ROS_IMAGE_ID=`docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
+  ROS_IMAGE_ID=`echo $ROS_IMAGE_ID | awk '{print $1}'`
 done
 echo $ROS_IMAGE_ID
 
