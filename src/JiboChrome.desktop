@@ -1,0 +1,9 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Exec=/home/prg/projects/prg-s02-system-setup/chrome-linux/chrome --password-store=basic
+Name=JiboChromium
+Comment=JiboChromium
+Icon=/home/prg/projects/prg-s02-system-setup/chrome-linux/product_logo_48.png
