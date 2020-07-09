@@ -26,10 +26,10 @@ echo "OK"
 
 echo
 echo -e "${G}Setup Reboot Timer${N}"
-sudo touch /var/spool/cron/crontabs/root
-sudo chmod 600 /var/spool/cron/crontabs/root
-reboot_cmd="00 7 \* \* \*      /sbin/reboot"
-(sudo crontab -u root -l; echo "$reboot_cmd" ) | sudo crontab -u root -
+# reboot_cmd="00 7 \* \* \*      /sbin/reboot"
+if ! sudo grep -q "00 7 \* \* \*    /sbin/reboot"; then 
+   echo -e "$(sudo crontab -u root -l)\n00 7 * * *    /sbin/reboot" | sudo crontab -u root -
+fi
 sudo cat /var/spool/cron/crontabs/root
 echo "OK"
 
@@ -161,7 +161,7 @@ wlan2=`ifconfig wlp0s20f3 2>/dev/null | awk '/HWaddr/ {print $5}'`
 eth=`ifconfig eno1 2>/dev/null | awk '/HWaddr/ {print $5}'`
 
 echo "WLAN  $wlan1$wlan2"
-echo "ETH  $eth"
+echo "ETH   $eth"
 #xdg-open https://docs.google.com/spreadsheets/d/1LyPBXvrFj7XT9vVZTdyXslW371ttndbsb-SnG8kh-2M/edit?usp=sharing # KIPP LIST
 xdg-open https://docs.google.com/spreadsheets/d/135a5wF63Tt_AUOSR7NvoM1jeysmoccADIUxwsIcF2c0/edit?usp=sharing  #HOME LIST
 
