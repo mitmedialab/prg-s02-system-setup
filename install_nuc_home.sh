@@ -122,7 +122,8 @@ echo "OK"
 
 echo
 echo -e "${G}Add Docker Monitor Script${N}"
-sudo mv s02-docker_monitor.sh /usr/local/bin/ &&
+sudo cp s02-docker_monitor /usr/local/bin/ &&
+sudo cp docker-ros /usr/local/bin/ &&
 echo "OK"
 
 echo
