@@ -70,7 +70,7 @@ sudo systemctl start ssh
 echo
 echo -e "${G}Install low version Chromium for Jibo Console${N}"
 wget http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/629479/chrome-linux.zip -P ~/ &&
-unzip ~/chrome-linux.zip -d ~/chrome-linux &&
+unzip ~/chrome-linux.zip -d ~/ &&
 cp src/JiboChromium.desktop ~/Desktop &&
 echo "OK"
 
