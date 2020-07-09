@@ -24,6 +24,7 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
       - Password: (ask Hae Won)
       - Select Login Automatically.
     - If you're connected via ethernet, skip wifi connection. If not, **connect to any other than "PRG-MIT"**
+    - Open System Settings -> Power and select "Don't suspend" under "Suspend when inactive" for menu.
  
 5. Clone this repo.
     - `sudo apt install -y git`
