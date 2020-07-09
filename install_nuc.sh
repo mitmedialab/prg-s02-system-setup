@@ -78,7 +78,7 @@ sudo apt-get update &&
 
 echo
 echo -e "${G}install packages${N}"
-sudo apt-get -y install vim-gnome apt-transport-https ca-certificates curl gnupg-agent software-properties-common &&
+sudo apt-get -y install vim-gnome apt-transport-https ca-certificates curl gnupg-agent software-properties-common xclip &&
 
 #echo
 #echo -e "${G}Install packages${N}"
@@ -96,7 +96,7 @@ FILE="/home/prg/chrome-linux.zip"
 if [[ ! -f "$FILE" ]]; then
    wget http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/629479/chrome-linux.zip -P ~/ 
 fi
-unzip ~/chrome-linux.zip -d ~/ &&
+unzip -qq ~/chrome-linux.zip -d ~/ &&
 cp -R -u -p src/JiboChromium_logo.png ~/chrome-linux &&
 cp -R -u -p src/JiboChromium.desktop ~/Desktop &&
 echo "OK"
@@ -182,11 +182,14 @@ eth=`ifconfig eno1 2>/dev/null | awk '/HWaddr/ {print $5}'`
 
 echo "WLAN  $wlan1$wlan2"
 echo "ETH   $eth"
-xdg-open $SHEET_URL
+xdg-open $SHEET_URL 2>/dev/null
 
 echo
-echo "Done. Now run 'sudo teamviewer setup' on another terminal. Don't forget to check email for verification."
-read -n 1 -r -s -p $'When done, press any key to continue...\n'
+echo "Done. Now run 'sudo teamviewer setup' on another terminal. After logging in the first time, you need to check email and verify new device."
+echo "robots.deployment@gmail.com is copied to clipboard for your convenience."
+echo "robots.deployment@gmail.com" | xclip -selection c
+
+read -n 1 -r -s -p $'When done, press any key to continue...\n\n'
 
 echo
 read -n 1 -r -s -p $'Connect USB camera and press any key to continue...\n'
