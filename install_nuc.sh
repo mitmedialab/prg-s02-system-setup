@@ -203,7 +203,7 @@ done
 echo $ROS_IMAGE_ID
 
 sudo docker run -d -it --name=s02-ros_usb-cam --device=/dev/video0:/dev/video0 --restart=always --network=host \
-         --workdir=/root/projects $ROS_IMAGE_ID  python3.6 -m s02-storybook.scripts.launcher_scripts.start_usb_cam_launcher &&
+         --workdir=/root/projects $ROS_IMAGE_ID  python3.6 -m s02-storybook.scripts.launcher_scripts.start_usb_cam_launcher 
 
 # sudo docker run -d -it --restart=unless-stopped --device=/dev/snd:/dev/snd \
 #         --network=host --workdir=/root/catkin_ws/src/unity-game-controllers \
