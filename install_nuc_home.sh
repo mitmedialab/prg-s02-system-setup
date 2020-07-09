@@ -19,7 +19,7 @@ echo "OK"
 
 echo
 echo -e "${G}Setup Jibo Audio Streaming Script${N}"
-sudo cp src/jibo-audio-streaming-receiver.sh  /usr/local/bin/
+sudo cp -R -u -p src/jibo-audio-streaming-receiver.sh  /usr/local/bin/
 # line="/usr/local/bin/jibo-audio-streaming-receiver.sh &"
 # sudo grep -qxF "$line" /etc/rc.local || sudo sed -i '$i \'"$line"'\n' /etc/rc.local
 echo "OK"
@@ -30,12 +30,14 @@ echo -e "${G}Setup Reboot Timer${N}"
 if ! sudo grep -q "00 7 \* \* \*    /sbin/reboot" /var/spool/cron/crontabs/root; then 
    echo -e "$(sudo crontab -u root -l)\n00 7 * * *    /sbin/reboot" | sudo crontab -u root -
 fi
+echo
 sudo cat /var/spool/cron/crontabs/root
+echo
 echo "OK"
 
 echo
 echo -e "${G}Setup PRG-MIT WiFi${N}"
-sudo cp src/PRG-MIT /etc/NetworkManager/system-connections/
+sudo cp -R -u -p src/PRG-MIT /etc/NetworkManager/system-connections/
 sudo chmod 600 /etc/NetworkManager/system-connections/PRG-MIT &&
 echo "OK"
 
@@ -76,8 +78,8 @@ if [[ ! -f "$FILE" ]]; then
    wget http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/629479/chrome-linux.zip -P ~/ 
 fi
 unzip ~/chrome-linux.zip -d ~/ &&
-cp src/JiboChromium_logo.png ~/chrome-linux &&
-cp src/JiboChromium.desktop ~/Desktop &&
+cp -R -u -p src/JiboChromium_logo.png ~/chrome-linux &&
+cp -R -u -p src/JiboChromium.desktop ~/Desktop &&
 echo "OK"
 
 echo
@@ -135,8 +137,8 @@ echo "OK"
 
 echo
 echo -e "${G}Add Docker Monitor Script${N}"
-sudo cp src/s02-docker_monitor /usr/local/bin/ &&
-sudo cp src/docker-ros /usr/local/bin/ &&
+sudo cp -R -u -p src/s02-docker_monitor /usr/local/bin/ &&
+sudo cp -R -u -p src/docker-ros /usr/local/bin/ &&
 echo "OK"
 
 echo
