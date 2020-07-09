@@ -27,7 +27,7 @@ echo "OK"
 echo
 echo -e "${G}Setup Reboot Timer${N}"
 # reboot_cmd="00 7 \* \* \*      /sbin/reboot"
-if ! sudo grep -q "00 7 \* \* \*    /sbin/reboot"; then 
+if ! sudo grep -q "00 7 \* \* \*    /sbin/reboot" /var/spool/cron/crontabs/root; then 
    echo -e "$(sudo crontab -u root -l)\n00 7 * * *    /sbin/reboot" | sudo crontab -u root -
 fi
 sudo cat /var/spool/cron/crontabs/root
