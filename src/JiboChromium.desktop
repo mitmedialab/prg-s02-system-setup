@@ -6,4 +6,4 @@ Terminal=false
 Exec=/home/prg/chrome-linux/chrome --password-store=basic
 Name=JiboChromium
 Comment=JiboChromium
-Icon=/home/prg/chrome-linux/product_logo_48.png
+Icon=/home/prg/chrome-linux/JiboChromium_logo.png
