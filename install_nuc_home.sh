@@ -69,7 +69,10 @@ sudo systemctl start ssh
 
 echo
 echo -e "${G}Install low version Chromium for Jibo Console${N}"
-wget http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/629479/chrome-linux.zip -P ~/ &&
+FILE="~/chrome-linux.zip"
+if [[ ! -f "$FILE" ]]; then
+   wget http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/629479/chrome-linux.zip -P ~/ 
+fi
 unzip ~/chrome-linux.zip -d ~/ &&
 cp src/JiboChromium_logo.png ~/chrome-linux &&
 cp src/JiboChromium.desktop ~/Desktop &&
@@ -136,7 +139,10 @@ echo "OK"
 
 echo
 echo -e "${G}Install and Log-in to TeamViewer${N}"
-wget https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc &&
+FILE="TeamViewer2017.asc"
+if [[ ! -f "$FILE" ]]; then
+   wget https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc &&
+fi
 sudo apt-key add TeamViewer2017.asc &&
 sudo sh -c 'echo "deb http://linux.teamviewer.com/deb stable main" >> /etc/apt/sources.list.d/teamviewer.list' &&
 sudo apt update &&
