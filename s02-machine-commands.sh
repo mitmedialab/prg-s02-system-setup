@@ -5,14 +5,6 @@ password="kronik420"
 wifi_password="JiboLovesPizzaAndMacaroni1"
 jibo_audio_file="jibo-audio-streaming-receiver.sh"
 
-
-n02_addr=(
-"10.111.28.49"
-"10.111.28.50"
-"10.111.28.51"
-"10.111.28.52"
-)
-
 # execute an ssh command, but handle the continue connection prompt and/or the password prompt
 ssh_cmd() {
     expect -f - $password $* <<EOF
@@ -51,17 +43,20 @@ ssh_nuc_sudo() {
     ssh -t $username@$nuc_ip_addr $*
 }
 
-
 setup_jibo_audio_streaming() {
 
   ssh_cmd scp $jibo_audio_file $username@$nuc_ip_addr:~/jibo-audio-streaming-receiver.sh
-  ssh_nuc_sudo "echo $password | sudo -S mv ~/jibo-audio-streaming-receiver.sh  /usr/local/bin/"
-  #ssh_nuc_sudo "sudo chmod a+x /usr/local/bin/jibo-audio-streaming-receiver.sh"
-  if ssh_nuc grep -q "$jibo_audio_file" /etc/rc.local; then
-    echo "jibo audio streaming is already setup."
-  else
-    ssh_nuc_sudo "echo $password | sudo -S sed -i '/exit 0/i\/usr/local/bin/jibo-audio-streaming-receiver.sh &\n' /etc/rc.local"
-  fi
+  ssh_nuc sudo mv ~/jibo-audio-streaming-receiver.sh  /usr/local/bin/
+
+  line="/usr/local/bin/jibo-audio-streaming-receiver.sh &"
+  ssh_nuc sudo grep -qxF "$line" /etc/rc.local || sudo sed -i '$i \'"$line"'\n' /etc/rc.local
+  
+#   if ssh_nuc grep -q "$jibo_audio_file" /etc/rc.local; then
+#     echo "jibo audio streaming is already setup."
+#   else
+#     ssh_nuc "echo $password | sudo -S sed -i '/exit 0/i\/usr/local/bin/jibo-audio-streaming-receiver.sh &\n' /etc/rc.local"
+#   fi  
+
 }
 
 
@@ -215,13 +210,4 @@ ask_to_reboot_jibo() {
     esac
 }
 
-#for i in ${!n02_addr[@]}; do
-#  nuc_ip_addr=${n02_addr[$i]}
-#  echo $i, $nuc_ip_addr
-#  #install_prg_ssh_keys
-#  #ssh_nuc ls 
-#  #required_ssid="PRG-MIT-8"
-#  #setup_wifi
-#  setup_jibo_audio_streaming
-#done
 
