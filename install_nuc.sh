@@ -54,11 +54,11 @@ sudo cat /var/spool/cron/crontabs/root
 echo
 echo "OK"
 
-echo
-echo -e "${G}Setup PRG-MIT WiFi${N}"
-sudo cp -R -u -p src/PRG-MIT /etc/NetworkManager/system-connections/
-sudo chmod 600 /etc/NetworkManager/system-connections/PRG-MIT &&
-echo "OK"
+# echo
+# echo -e "${G}Setup PRG-MIT WiFi${N}"
+# sudo cp -R -u -p src/PRG-MIT /etc/NetworkManager/system-connections/
+# sudo chmod 600 /etc/NetworkManager/system-connections/PRG-MIT &&
+# echo "OK"
 
 echo
 echo -e "${G}Add ssh keys${N}"
@@ -200,7 +200,7 @@ ROS_IMAGE_ID=`echo $ROS_IMAGE_ID | awk '{print $1}'`
 while [ -z "$ROS_IMAGE_ID" ]; do
   echo "Waiting for docker image to finish download..."
   sleep 10s
-  ROS_IMAGE_ID=`docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
+  ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
   ROS_IMAGE_ID=`echo $ROS_IMAGE_ID | awk '{print $1}'`
 done
 echo $ROS_IMAGE_ID
