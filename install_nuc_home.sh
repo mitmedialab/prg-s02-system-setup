@@ -17,12 +17,12 @@ echo "OK"
 # sudo grep -qxF "$line" /etc/pulse/default.pa || sudo sed -i '/#set-default-source/a\'"$line"'' /etc/pulse/default.pa  &&
 # echo "OK"
 
-# echo
-# echo -e "${G}Setup Jibo Audio Streaming Script${N}"
-# sudo cp jibo-audio-streaming-receiver.sh  /usr/local/bin/
+echo
+echo -e "${G}Setup Jibo Audio Streaming Script${N}"
+sudo cp jibo-audio-streaming-receiver.sh  /usr/local/bin/
 # line="/usr/local/bin/jibo-audio-streaming-receiver.sh &"
 # sudo grep -qxF "$line" /etc/rc.local || sudo sed -i '$i \'"$line"'\n' /etc/rc.local
-# echo "OK"
+echo "OK"
 
 echo
 echo -e "${G}Setup Reboot Timer${N}"
