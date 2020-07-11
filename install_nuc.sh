@@ -46,6 +46,9 @@ echo "OK"
 echo
 echo -e "${G}Setup Reboot Timer${N}"
 # reboot_cmd="00 7 \* \* \*      /sbin/reboot"
+if ! sudo grep -q "10 * * * *    /usr/sbin/service docker start" /var/spool/cron/crontabs/root; then 
+   echo -e "$(sudo crontab -u root -l)\n10 * * * *    /usr/sbin/service docker start" | sudo crontab -u root -
+fi
 if ! sudo grep -q "00 7 \* \* \*    /sbin/reboot" /var/spool/cron/crontabs/root; then 
    echo -e "$(sudo crontab -u root -l)\n00 7 * * *    /sbin/reboot" | sudo crontab -u root -
 fi
