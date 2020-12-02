@@ -3,6 +3,8 @@ N='\033[0m'
 
 source src/s02-machine-commands.sh
 
+ROOT_DIR=$PWD
+
 echo
 echo -e "${G}Set user to execute sudo commands without password${N}"
 line="$USER ALL=(ALL) NOPASSWD: ALL"
@@ -149,7 +151,7 @@ echo
 echo -e "${G}Add User to Docker group${N}"
 sudo groupadd docker
 sudo gpasswd -a $USER docker
-# newgrp docker # if you do this, it will exit out to terminal. So don't do it.
+#newgrp docker & # if you do this, it will exit out to terminal. So don't do it.
 sleep 1s
 mkdir -p /home/prg/.docker &&
 sudo chown prg:prg /home/prg/.docker -R &&
@@ -166,8 +168,8 @@ INSTALL_WIFI_DONGLE=true
 while true; do
     read -p "Are you installing a WiFi dongle? [Y/n]: " yn
     case $yn in
-        [Nn]* ) INSTALL_WIFI_DONGLE=false;;
-        [Yy]* ) read -n 1 -r -s -p  "Okay, setting up WiFi Dongle. Connect WiFi USB Dongle and hit enter...";;
+        [Nn]* ) INSTALL_WIFI_DONGLE=false; break;;
+        [Yy]* ) read -n 1 -r -s -p  "Okay, setting up WiFi Dongle. Connect WiFi USB Dongle and hit enter..."; break;;
         * ) echo "Please answer yes or no.";;
     esac
 done
@@ -254,6 +256,8 @@ if $INSTALL_WIFI_DONGLE; then
       sudo git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
       sudo chown prg /usr/local/jibo-station-wifi-service
       cd /usr/local/jibo-station-wifi-service && ./install.sh
+
+      cd $ROOT_DIR
    fi
 fi
 
@@ -266,7 +270,7 @@ FILE="remotepc.deb"
 if [[ ! -f "$FILE" ]]; then
    wget  https://static.remotepc.com/downloads/rpc/310320/remotepc.deb
 fi
-sudo apt install -y remotepc.deb
+sudo apt install -y ./remotepc.deb
 
 echo
 echo -e "${G}Install and Log-in to TeamViewer${N}"
