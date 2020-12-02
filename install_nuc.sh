@@ -163,6 +163,14 @@ sudo cp -R -u -p src/docker-ros /usr/local/bin/ &&
 echo "OK"
 
 echo
+echo -e "${G}Install and Log-in to RemotePC${N}"
+FILE="remotepc.deb"
+if [[ ! -f "$FILE" ]]; then
+   wget  https://static.remotepc.com/downloads/rpc/310320/remotepc.deb
+fi
+sudo apt install -y remotepc.deb
+
+echo
 echo -e "${G}Install and Log-in to TeamViewer${N}"
 FILE="TeamViewer2017.asc"
 if [[ ! -f "$FILE" ]]; then
@@ -188,9 +196,10 @@ echo "ETH   $eth"
 xdg-open $SHEET_URL 2>/dev/null
 
 echo
-echo "Done. Now run 'sudo teamviewer setup' on another terminal. After logging in the first time, you need to check email and verify new device."
+echo "Done. Now run 'remotepc &' and 'sudo teamviewer setup' on another terminal. After logging in the first time, you need to check email and verify new device."
 echo "robots.deployment@gmail.com is copied to clipboard for your convenience."
 echo "robots.deployment@gmail.com" | xclip -selection c
+echo "RemotePC Password: u8sv5R&K8n4q"
 
 read -n 1 -r -s -p $'When done, press any key to continue...\n\n'
 
