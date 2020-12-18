@@ -1,3 +1,5 @@
+docker rm -f s02-ros_usb-cam
+
 echo
 read -n 1 -r -s -p $'Connect USB camera and press any key to continue...\n'
 echo
