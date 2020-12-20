@@ -16,4 +16,5 @@ else
 fi
 
 
-sudo docker swarm leave && sudo docker swarm join --token $SWARM_TOKEN 
+sudo docker swarm leave 
+sudo docker swarm join --token $SWARM_TOKEN 
