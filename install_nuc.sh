@@ -251,6 +251,8 @@ if $INSTALL_WIFI_DONGLE; then
 
       sudo sed -i~ '/^Requires=network.target/a After=network-online.target\nWants=network-online.target' /lib/systemd/system/dnsmasq.service
 
+      sudo cp /lib/systemd/system/dnsmasq.service  /etc/systemd/system/
+
       sudo sed -i~ '/^exit 0.*/e cat wifi_rclocal_config.txt' /etc/rc.local
 
       sudo git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
