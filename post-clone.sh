@@ -7,6 +7,6 @@ sudo sed -i 's/$default_hn/$target_hn/' /etc/hostname
 sudo sed -i 's/$default_hn/$target_hn/' /etc/hosts
 sudo sed -i 's/$default_hn/$target_hn/' /etc/hostapd/hostapd.conf
 
-systemctl restart systemd-logind.service
+echo 'Reboot? (y/n)' && read x && [[ "$x" == "y" ]] && /sbin/reboot; 
 
 
