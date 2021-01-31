@@ -255,7 +255,7 @@ if $INSTALL_WIFI_DONGLE; then
 
       sudo sed -i~ '/^exit 0.*/e cat wifi_rclocal_config.txt' /etc/rc.local
 
-      sudo git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
+      sudo git clone -b nuc https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
       sudo chown prg /usr/local/jibo-station-wifi-service
       cd /usr/local/jibo-station-wifi-service && ./install.sh
 
