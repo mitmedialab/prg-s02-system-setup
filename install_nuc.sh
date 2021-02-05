@@ -48,7 +48,10 @@ echo "OK"
 echo
 echo -e "${G}Setup Reboot Timer${N}"
 # reboot_cmd="00 7 \* \* \*      /sbin/reboot"
-if ! sudo grep -q "10 \* \* \* \*    /usr/sbin/service docker start" /var/spool/cron/crontabs/root; then 
+if ! sudo grep -q "\*/1 \* \* \* \*    /bin/bash /usr/local/jibo-station-wifi-service/check_and_run.sh" /var/spool/cron/crontabs/root; then 
+   echo -e "$(sudo crontab -u root -l)\n*/1 * * * *    /bin/bash /usr/local/jibo-station-wifi-service/check_and_run.sh" | sudo crontab -u root -
+fi
+if ! sudo grep -q "\*/1 \* \* \* \*    /bin/systemctl start docker" /var/spool/cron/crontabs/root; then 
    echo -e "$(sudo crontab -u root -l)\n*/1 * * * *    /bin/systemctl start docker" | sudo crontab -u root -
 fi
 if ! sudo grep -q "00 7 \* \* \*    /sbin/reboot" /var/spool/cron/crontabs/root; then 
@@ -256,7 +259,7 @@ if $INSTALL_WIFI_DONGLE; then
       sudo sed -i~ '/^exit 0.*/e cat wifi_rclocal_config.txt' /etc/rc.local
 
       sudo git clone -b nuc https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
-      sudo chown prg /usr/local/jibo-station-wifi-service
+      sudo chown -R prg /usr/local/jibo-station-wifi-service
       cd /usr/local/jibo-station-wifi-service && ./install.sh
 
       cd $ROOT_DIR
