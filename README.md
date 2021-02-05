@@ -7,8 +7,7 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
 1. Connect NUC.
     - Insert the intallation USB thumbdrive.
     - Connect monitor, mouse, and keyboard.
-    - **Connect WiFi Dongle** (optional)
-    - Prepare PRG-MIT network.
+    - Connect ethernet cable.
     - Connect power cable.
 
 2. Power on NUC.
@@ -18,14 +17,15 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
     - After entering BIOS settings, go to advanced > power > after power failure, select ‘power on’ instead of ‘stay off’. 
     - Save and exit with F10.
 
-4. Install Ubuntu. We use 16.04 LTS desktop image built for NUCs.
+4. Install Ubuntu. We use 16.04 LTS desktop image built for NUCs [http://people.canonical.com/~platform/images/nuc/pc-dawson-xenial-amd64-m4-20180507-32.iso?_ga=2.58458346.1505674856.1612557677-900696344.1612557677].
+    - After a reboot, unplug the USB thumbdrive and connect the WiFi Adapter.
     - Settings
       - User Name: prg
-      - Computer name:  as in the lable on the NUC, e.g., s02-n01-nuc-01
+      - Computer name:  as in the lable on the NUC, e.g., s02-n00-nuc-01
       - Password: (on LastPass)
       - Select Login Automatically.
-    - Connect to PRG-MIT wifi.
     - Open System Settings -> Power and select "Don't suspend" under "Suspend when inactive" menu.
+    - Open System Settings -> Software & Updates -> Updates and select "Never" under "Automatically check for updates", "Display immediately" under "When there are security updates", and "Never" under "Notify  me of a new Ubuntu version".
  
 5. Clone this repo.
     - `sudo apt install -y git`
@@ -35,8 +35,10 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
     - `cd prg-s02-system-setup`
     - `./install_nuc.sh`
     - If prompted for teamviewer configuration file setup, enter Y.
+    - Enter y to setup the WiFi when prompted.
     - If prompted for update Ubuntu, do not.
     - Check for errors, but don't worry about the error about unable to find /dev/video0 when starting USB_CAM docker container.
+    - reboot
 
 7. Setup RemotePC
     - run `remotepc`
