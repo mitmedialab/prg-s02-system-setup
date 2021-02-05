@@ -18,6 +18,7 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
     - Save and exit with F10.
 
 4. Install Ubuntu. We use 16.04 LTS desktop image built for NUCs [http://people.canonical.com/~platform/images/nuc/pc-dawson-xenial-amd64-m4-20180507-32.iso?_ga=2.58458346.1505674856.1612557677-900696344.1612557677].
+    - After a reboot, unplug the USB thumbdrive and connect the WiFi Adapter.
     - Settings
       - User Name: prg
       - Computer name:  as in the lable on the NUC, e.g., s02-n00-nuc-01
@@ -34,8 +35,10 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
     - `cd prg-s02-system-setup`
     - `./install_nuc.sh`
     - If prompted for teamviewer configuration file setup, enter Y.
+    - Enter y to setup the WiFi when prompted.
     - If prompted for update Ubuntu, do not.
     - Check for errors, but don't worry about the error about unable to find /dev/video0 when starting USB_CAM docker container.
+    - reboot
 
 7. Setup RemotePC
     - run `remotepc`
