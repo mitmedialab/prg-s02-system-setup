@@ -258,9 +258,9 @@ if $INSTALL_WIFI_DONGLE; then
       sudo sed -i~ '/^exit 0.*/e cat wifi_rclocal_config.txt' /etc/rc.local
 
       echo "installing dhcpcd5"
-      apt update
-      apt install dhcpcd5
-      systemctl enable dhcpcd
+      sudo apt update
+      sudo apt install dhcpcd5
+      sudo systemctl enable dhcpcd
 
       echo "configuring wpa_supplicant"
       echo "$wpa_supplicant" | sudo tee /etc/wpa_supplicant.conf
@@ -268,13 +268,13 @@ if $INSTALL_WIFI_DONGLE; then
       sudo mv wpa_supplicant.service /etc/systemd/system/
 
       # probably not needed
-      systemctl enable wpa_supplicant.service
+      sudo systemctl enable wpa_supplicant.service
 
       # diable Network Manager
       #systemctl stop NetworkManager  # nah! probably don't wanna do this
       for f in NetworkManager NetworkManager-wait-online.service NetworkManager-dispatcher.service network-manager.service; do
          echo "disabling $f"
-         systemctl disable $f
+         sudo systemctl disable $f
       done
 
       sudo git clone -b nuc https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
