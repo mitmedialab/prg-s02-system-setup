@@ -22,7 +22,7 @@ sudo vnclicensewiz
 #sudo apt update
 #sudo apt install python3.7
 
-sudo apt-get -y install python3-pip python3-pyqt5 python3-pyqt5.qtmultimedia
+sudo apt-get -y install python3-pip python3-pyqt5 python3-pyqt5.qtmultimedia python3-pandas
 
 #sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
 #sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
@@ -56,8 +56,10 @@ rosdep update
 
 mkdir -p ~/catkin_ws/src
 
-git clone https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
+git clone -b SJ2 https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
 git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
+git clone http://github.com/mitmedialab/asr_google_cloud ~/catkin_ws/src/asr_google_cloud
+
 
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
 source ~/.bashrc
