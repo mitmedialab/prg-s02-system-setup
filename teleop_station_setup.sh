@@ -1,10 +1,5 @@
 #!/bin/bash
 
-mkdir -p ~/catkin_ws/src
-
-git clone https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
-git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
-
 FILE="zoom_amd64.deb"
 if [[ ! -f "$FILE" ]]; then
     wget https://zoom.us/client/latest/zoom_amd64.deb 
@@ -34,14 +29,12 @@ sudo apt-get -y install python3-pip
 
 #sudo update-alternatives --config python3
 
-python3.7 -m pip install pip
-python3.7 -m pip install transitions pyyaml PyQt5
-
-python3.5 -m pip install pip
-python3.5 -m pip install transitions
 
 # setup ROS
 python3.7 -m pip install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag
+
+#python3.7 -m pip install pip
+python3.7 -m pip install transitions PyQt5
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 
@@ -58,7 +51,12 @@ sudo apt install -y python-rosdep python-rosinstall python-rosinstall-generator 
 sudo rosdep init
 rosdep update
 
-cd ~/catkin_ws; catkin_make
+
+mkdir -p ~/catkin_ws/src
+
+git clone https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
+git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
+
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
