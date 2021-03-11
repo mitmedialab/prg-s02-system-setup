@@ -29,18 +29,21 @@ sudo apt install python3.7
 
 sudo apt-get -y install python3-pip
 
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
+#sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
+#sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
 
-sudo update-alternatives --config python3
+#sudo update-alternatives --config python3
 
 python3.7 -m pip install pip
 python3.7 -m pip install transitions
 
+python3.5 -m pip install pip
+python3.5 -m pip install transitions
 
 # setup ROS
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+sudo -E apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
 sudo apt-get update
 sudo apt-get install ros-kinetic-desktop-full
