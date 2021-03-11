@@ -16,13 +16,13 @@ sudo systemctl enable vncserver-x11-serviced --now
 sudo vnclicensewiz
 
 # install python3.7
-sudo apt update
-sudo apt install software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt install python3.7
+#sudo apt update
+#sudo apt install software-properties-common
+#sudo add-apt-repository ppa:deadsnakes/ppa
+#sudo apt update
+#sudo apt install python3.7
 
-sudo apt-get -y install python3-pip
+sudo apt-get -y install python3-pip python3-pyqt5 python3-pyqt5.qtmultimedia
 
 #sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
 #sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
@@ -31,10 +31,10 @@ sudo apt-get -y install python3-pip
 
 
 # setup ROS
-python3.7 -m pip install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag
+#python3.7 -m pip install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag
 
 #python3.7 -m pip install pip
-python3.7 -m pip install transitions PyQt5
+#python3.7 -m pip install transitions PyQt5
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 
@@ -46,7 +46,9 @@ sudo apt-get install ros-kinetic-desktop-full
 echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
-sudo apt install -y python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+sudo apt-get -y install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+
+sudo apt-get -y install python3-catkin-pkg-modules python3-rospkg-modules
 
 sudo rosdep init
 rosdep update
@@ -60,3 +62,4 @@ git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
+pip3 install pyyaml transitions
