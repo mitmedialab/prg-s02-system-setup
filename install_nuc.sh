@@ -48,9 +48,9 @@ echo "OK"
 echo
 echo -e "${G}Setup Reboot Timer${N}"
 # reboot_cmd="00 7 \* \* \*      /sbin/reboot"
-if ! sudo grep -q "\*/1 \* \* \* \*    /bin/bash /usr/local/jibo-station-wifi-service/check_and_run.sh" /var/spool/cron/crontabs/root; then 
-   echo -e "$(sudo crontab -u root -l)\n*/1 * * * *    /bin/bash /usr/local/jibo-station-wifi-service/check_and_run.sh" | sudo crontab -u root -
-fi
+# if ! sudo grep -q "\*/1 \* \* \* \*    /bin/bash /usr/local/jibo-station-wifi-service/check_and_run.sh" /var/spool/cron/crontabs/root; then 
+#    echo -e "$(sudo crontab -u root -l)\n*/1 * * * *    /bin/bash /usr/local/jibo-station-wifi-service/check_and_run.sh" | sudo crontab -u root -
+# fi
 if ! sudo grep -q "\*/1 \* \* \* \*    /bin/systemctl start docker" /var/spool/cron/crontabs/root; then 
    echo -e "$(sudo crontab -u root -l)\n*/1 * * * *    /bin/systemctl start docker" | sudo crontab -u root -
 fi
@@ -178,7 +178,7 @@ while true; do
 done
 
 read -r -d '' wifi_interfaces_config <<EOF
-iface wlp0s20f3 inet static
+iface wlan0 inet static
 address 10.99.0.1
 netmask 255.255.255.0
 gateway 10.99.0.1
@@ -191,7 +191,7 @@ EOF
 
 read -r -d '' wifi_hostapd_config <<EOF
 country_code=US
-interface=wlp0s20f3
+interface=wlan0
 driver=nl80211
 ssid=$HOSTNAME
 hw_mode=g
@@ -207,7 +207,7 @@ rsn_pairwise=CCMP
 EOF
 
 read -r -d '' wifi_dnsmasq_config <<EOF
-interface=wlp0s20f3
+interface=wlan0
 dhcp-range=10.99.0.2,10.99.0.20,255.255.255.0,24h
 no-hosts
 addn-hosts=/etc/hosts.dnsmasq
@@ -215,29 +215,28 @@ domain=wlan
 address=/gw.wlan/10.99.0.1
 EOF
 
-read -r -d '' wifi_rclocal_config <<EOF
-interface=`ip address | egrep "^[0-9]+: " | cut -d: -f2 | egrep "wlx............"`
-iptables -t nat -A POSTROUTING -o $interface -j MASQUERADE
-iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i wlp0s20f3 -o $interface -j ACCEPT
-
-iptables -t nat -A POSTROUTING -o eno1 -j MASQUERADE
-iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i wlp0s20f3 -o eno1 -j ACCEPT
+read -r -d '' wpa_supplicant <<EOF
+ctrl_interface=/var/run/wpa_supplicant
+update_config=1
+country=US
 EOF
 
 if $INSTALL_WIFI_DONGLE; then
    if [ ! -d "/usr/local/jibo-station-wifi-service" ]; then
 
+      # disable the unique network interface names, go back to wlan0 & wlan1
+      echo "disabling complex names"
+      sudo ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
+
       echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces
-      sudo sed -i~ 's/auto lo/auto lo wlp0s20f3/' /etc/network/interfaces
+      sudo sed -i~ 's/auto lo/auto lo wlan0/' /etc/network/interfaces
 
       # cat /etc/network/interfaces
       # echo
       # echo "/etc/network/interfaces should look like this:"
-      # echo "auto lo wlp0s20f3
+      # echo "auto lo wlan0
       #  iface lo inet loopback
-      #  iface wlp0s20f3 inet static
+      #  iface wlan0 inet static
       #  address 10.99.0.1
       #  netmask 255.255.255.0
       #  gateway 10.99.0.1"
@@ -258,6 +257,26 @@ if $INSTALL_WIFI_DONGLE; then
 
       sudo sed -i~ '/^exit 0.*/e cat wifi_rclocal_config.txt' /etc/rc.local
 
+      echo "installing dhcpcd5"
+      apt update
+      apt install dhcpcd5
+      systemctl enable dhcpcd
+
+      echo "configuring wpa_supplicant"
+      echo "$wpa_supplicant" | sudo tee /etc/wpa_supplicant.conf
+      
+      sudo mv wpa_supplicant.service /etc/systemd/system/
+
+      # probably not needed
+      systemctl enable wpa_supplicant.service
+
+      # diable Network Manager
+      #systemctl stop NetworkManager  # nah! probably don't wanna do this
+      for f in NetworkManager NetworkManager-wait-online.service NetworkManager-dispatcher.service network-manager.service; do
+         echo "disabling $f"
+         systemctl disable $f
+      done
+
       sudo git clone -b nuc https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
       sudo chown -R prg /usr/local/jibo-station-wifi-service
       cd /usr/local/jibo-station-wifi-service && ./install.sh
@@ -265,9 +284,6 @@ if $INSTALL_WIFI_DONGLE; then
       cd $ROOT_DIR
    fi
 fi
-
-
-
 
 echo
 echo -e "${G}Install and Log-in to RemotePC${N}"
