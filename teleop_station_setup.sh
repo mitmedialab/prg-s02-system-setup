@@ -60,6 +60,12 @@ git clone -b SJ2 https://github.com/mitmedialab/triadic-interaction-controller ~
 git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
 git clone http://github.com/mitmedialab/asr_google_cloud ~/catkin_ws/src/asr_google_cloud
 
+mkdir -p ~/catkin_ws/src/output_data/annotation_log
+mkdir -p ~/catkin_ws/src/output_data/session_info
+mkdir -p ~/catkin_ws/src/output_data/tablet_log
+mkdir -p ~/catkin_ws/src/output_data/interaction_log
+mkdir -p ~/catkin_ws/src/output_data/jibo_speech_change
+
 
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
 source ~/.bashrc
