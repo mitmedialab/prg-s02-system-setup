@@ -167,6 +167,13 @@ sudo cp -R -u -p src/s02-docker_monitor /usr/local/bin/ &&
 sudo cp -R -u -p src/docker-ros /usr/local/bin/ &&
 echo "OK"
 
+echo
+echo -e "${G}Setup VPN${N}"
+tar zxvf vpn-s02.tar.gz -C ~/
+cd ~/vpn && sudo ./install.sh 
+cd $ROOT_DIR
+echo "OK"
+
 INSTALL_WIFI_DONGLE=true
 while true; do
     read -p "Are you installing a WiFi dongle? [Y/n]: " yn
