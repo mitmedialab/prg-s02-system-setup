@@ -20,7 +20,7 @@ sudo apt-get install pulseaudio-utils
 #setting up usb_cam ros package
 sudo apt install ros-kinetic-usb-cam
 rosdep install ros-kinetic-usb-cam
-sudo mv ~/family_video_cam.launch /opt/ros/kinetic/share/usb_cam/launch 
+sudo mv ~/family_video.launch /opt/ros/kinetic/share/usb_cam/launch 
 
 #setting up gscam ros package - gstreamer is not stable, acting crazy in every station with different issue every time
 #rosdep install gscam
