@@ -17,10 +17,15 @@ sudo apt-get -y install gstreamer0.10-plugins-good gstreamer0.10-tools gstreamer
 #setting up pulseaudio
 sudo apt-get install pulseaudio-utils
 
-#setting up gscam ros package
-rosdep install gscam
-sudo apt-get install ros-kinetic-gscam
-sudo mv ~/family_video.launch /opt/ros/kinetic/share/gscam 
+#setting up usb_cam ros package
+sudo apt install ros-kinetic-usb-cam
+rosdep install ros-kinetic-usb-cam
+sudo mv ~/family_video_cam.launch /opt/ros/kinetic/share/usb_cam/launch 
+
+#setting up gscam ros package - gstreamer is not stable, acting crazy in every station with different issue every time
+#rosdep install gscam
+#sudo apt-get install ros-kinetic-gscam
+#sudo mv ~/family_video.launch /opt/ros/kinetic/share/gscam 
 
 #setting up audio ros package
 cd ~/catkin_ws/src
@@ -30,7 +35,7 @@ mv ~/audio_capture.cpp ~/catkin_ws/src/audio_common/audio_capture/src
 mv ~/family_audio.launch ~/catkin_ws/src/audio_common/audio_capture/launch
 
 cd ~/catkin_ws
-#Hae Won said to have this separate 
+#Hae Won said to have this separate - to build all other ros packages 
 #catkin_make
 source ~/catkin_ws/devel/setup.bash
 
@@ -53,13 +58,3 @@ sudo bash -c 'cat >>  /etc/pulse/default.pa <<EOL
 load-module module-null-sink sink_name=Family
 load-module module-loopback sink=Family
 EOL'
-
-
-
-
-
-
-
-
-
-
