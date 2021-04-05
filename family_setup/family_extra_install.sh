@@ -4,7 +4,7 @@
 sudo apt-get install -y v4l2loopback-dkms
 
 # zoom interface is blocked - it needs OS upgrade 
-sudo apt-get upgrade
+sudo apt-get -y upgrade
 
 
 #setting up gstreamer 
@@ -15,10 +15,10 @@ sudo apt-get -y install gstreamer0.10-plugins-good gstreamer0.10-tools gstreamer
 
 
 #setting up pulseaudio
-sudo apt-get install pulseaudio-utils
+sudo apt-get install -y pulseaudio-utils
 
 #setting up usb_cam ros package
-sudo apt install ros-kinetic-usb-cam
+sudo apt install -y ros-kinetic-usb-cam
 rosdep install ros-kinetic-usb-cam
 sudo cp family_video.launch /opt/ros/kinetic/share/usb_cam/launch 
 
