@@ -20,7 +20,7 @@ sudo apt-get install pulseaudio-utils
 #setting up usb_cam ros package
 sudo apt install ros-kinetic-usb-cam
 rosdep install ros-kinetic-usb-cam
-sudo mv ~/family_video.launch /opt/ros/kinetic/share/usb_cam/launch 
+sudo cp family_video.launch /opt/ros/kinetic/share/usb_cam/launch 
 
 #setting up gscam ros package - gstreamer is not stable, acting crazy in every station with different issue every time
 #rosdep install gscam
@@ -31,8 +31,8 @@ sudo mv ~/family_video.launch /opt/ros/kinetic/share/usb_cam/launch
 cd ~/catkin_ws/src
 git clone https://github.com/ros-drivers/audio_common.git
 rosdep install audio_common
-mv ~/audio_capture.cpp ~/catkin_ws/src/audio_common/audio_capture/src
-mv ~/family_audio.launch ~/catkin_ws/src/audio_common/audio_capture/launch
+cp audio_capture.cpp ~/catkin_ws/src/audio_common/audio_capture/src
+cp family_audio.launch ~/catkin_ws/src/audio_common/audio_capture/launch
 
 cd ~/catkin_ws
 #Hae Won said to have this separate - to build all other ros packages 
