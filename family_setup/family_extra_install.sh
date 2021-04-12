@@ -31,12 +31,12 @@ sudo cp family_video.launch /opt/ros/kinetic/share/usb_cam/launch
 cd ~/catkin_ws/src
 git clone https://github.com/ros-drivers/audio_common.git
 rosdep install audio_common
-cp audio_capture.cpp ~/catkin_ws/src/audio_common/audio_capture/src
-cp family_audio.launch ~/catkin_ws/src/audio_common/audio_capture/launch
+cp ~/prg-s02-system-setup/family_setup/audio_capture.cpp ~/catkin_ws/src/audio_common/audio_capture/src
+cp ~/prg-s02-system-setup/family_setup/family_audio.launch ~/catkin_ws/src/audio_common/audio_capture/launch
 
 cd ~/catkin_ws
 #Hae Won said to have this separate - to build all other ros packages 
-#catkin_make
+catkin_make
 source ~/catkin_ws/devel/setup.bash
 
 
