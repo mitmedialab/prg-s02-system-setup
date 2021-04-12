@@ -36,7 +36,7 @@ cp ~/prg-s02-system-setup/family_setup/family_audio.launch ~/catkin_ws/src/audio
 
 cd ~/catkin_ws
 #Hae Won said to have this separate - to build all other ros packages 
-catkin_make
+#catkin_make
 source ~/catkin_ws/devel/setup.bash
 
 
