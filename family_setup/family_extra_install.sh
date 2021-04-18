@@ -16,6 +16,7 @@ sudo apt-get -y install gstreamer0.10-plugins-good gstreamer0.10-tools gstreamer
 
 #setting up pulseaudio
 sudo apt-get install -y pulseaudio-utils
+pip3 install psutil
 
 #setting up usb_cam ros package
 sudo apt install -y ros-kinetic-usb-cam
