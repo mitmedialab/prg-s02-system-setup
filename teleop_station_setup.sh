@@ -56,7 +56,8 @@ rosdep update
 
 mkdir -p ~/catkin_ws/src
 
-git clone -b SJ2 https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
+git clone -b SJ3 https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
+git clone -b controller https://github.com/mitmedialab/parent-child-reading-story-corpus.git ~/catkin_ws/src/parent-child-reading-story-corpus
 git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
 git clone http://github.com/mitmedialab/asr_google_cloud ~/catkin_ws/src/asr_google_cloud
 
@@ -65,9 +66,15 @@ mkdir -p ~/catkin_ws/src/output_data/session_info
 mkdir -p ~/catkin_ws/src/output_data/tablet_log
 mkdir -p ~/catkin_ws/src/output_data/interaction_log
 mkdir -p ~/catkin_ws/src/output_data/jibo_speech_change
-
+mkdir -p ~/catkin_ws/src/output_data/videos
 
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
 pip3 install pyyaml transitions
+
+# install sublime 
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+sudo add-apt-repository "deb https://download.sublimetext.com/ apt/stable/"
+sudo apt install sublime-text
