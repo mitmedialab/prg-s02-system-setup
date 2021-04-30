@@ -34,6 +34,7 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
 6. Run the installation script.
     - `cd prg-s02-system-setup`
     - `./install_nuc.sh`
+    - When prompted to select target environment, select 'HOME' for deployed stations and 'DEV' for development stations. You can easily change this later.
     - If prompted for teamviewer configuration file setup, enter Y.
     - Enter y to setup the WiFi when prompted.
     - If prompted for update Ubuntu, do not.
