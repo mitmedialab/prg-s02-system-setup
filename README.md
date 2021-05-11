@@ -26,6 +26,7 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
       - Select Login Automatically.
     - Open System Settings -> Power and select "Don't suspend" under "Suspend when inactive" menu.
     - Open System Settings -> Software & Updates -> Updates and select "Never" under "Automatically check for updates", "Display immediately" under "When there are security updates", and "Never" under "Notify  me of a new Ubuntu version".
+    - Open System Settings -> Brightness & Lock -> Turn screen off when inactive for “never”
  
 5. Connect WiFi and Clone this repo.
     - `sudo apt install -y git`
