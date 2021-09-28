@@ -284,7 +284,7 @@ if $INSTALL_WIFI_DONGLE; then
          sudo systemctl disable $f
       done
 
-      sudo git clone -b nuc https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
+      sudo git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
       sudo chown -R prg /usr/local/jibo-station-wifi-service
       cd /usr/local/jibo-station-wifi-service && ./install.sh
 
