@@ -6,5 +6,4 @@ iptables -t nat -A POSTROUTING -o eno1 -j MASQUERADE
 iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i wlan0 -o eno1 -j ACCEPT
 
-/usr/local/jibo-station-wifi-service/start.sh wlan1 >/dev/null 2>&1 &
 
