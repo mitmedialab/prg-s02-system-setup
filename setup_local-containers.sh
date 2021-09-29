@@ -47,7 +47,7 @@ sudo docker run -d -it --name=data-tardis_data-tardis --restart=always --network
       --env ETCO_synology_address_n02='10.111.28.41'	\
       --env ETCO_synology_password='9^jvH%5cU6#E'	\
       --env ETCO_synology_username='data-tardis'	\
-      --env ETCO_synology_port='5000'	\	
+      --env ETCO_synology_port='5000'             \
       --env ETCO_synology_directory='/DataTardis'	\
       --env ETCO_local_directory='/data/tardis'	\
       --env ETCO_check_periodicity_ms='60000'	\
