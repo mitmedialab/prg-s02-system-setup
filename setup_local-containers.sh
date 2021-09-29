@@ -42,7 +42,7 @@ echo $TARDIS_IMAGE_ID
 
 sudo docker run -d -it --name=data-tardis_data-tardis --restart=always --network=host --volume=/home/prg/rosbags/data-tardis:/data/tardis \
       --env HOST_HOSTNAME=$HOSTNAME	\
-      --env ETCO_synology_address_n00='192.168.41.41'	\
+      --env ETCO_synology_address_n00='prg-synology-1.media.mit.edu'	\
       --env ETCO_synology_address_n01='10.111.16.41'	\
       --env ETCO_synology_address_n02='10.111.28.41'	\
       --env ETCO_synology_password='9^jvH%5cU6#E'	\
