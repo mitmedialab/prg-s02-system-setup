@@ -29,16 +29,20 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
     - Open System Settings -> Brightness & Lock -> Turn screen off when inactive for “never”
  
 5. Connect WiFi and Clone this repo.
-    - `sudo apt install -y git`
+    - `sudo apt update && sudo apt install -y git`
     - `git clone https://github.com/mitmedialab/prg-s02-system-setup`
 
 6. Run the installation script.
     - `cd prg-s02-system-setup`
     - `./install_nuc.sh`
-    - When prompted to select target environment, select 'HOME' for deployed stations and 'DEV' for development stations. You can easily change this later.
-    - If prompted for teamviewer configuration file setup, enter Y.
+    - When prompted to select target environment, select 'HOME' for deployed stations and 'SCHOOL' for development stations. You can easily change this later.
+    - When prompted for teamviewer configuration file setup, enter Y.
     - Enter y to setup the WiFi when prompted.
-    - If prompted for update Ubuntu, do not.
+    - Do not reboot after WiFi setup. When prompted to reboot, enter n.
+    - When prompted to setup USB camera, enter y. You can also skip and run `./setup_usb-cam.sh` later.
+
+    - If prompted to update Ubuntu, do not.
+    
     - (optional, skip this part for family study) USB_CAM docker container setup: the last part of the setup is configuring USB Camera Docker. Ctrl-C and exit if you don't know if you need this part.
     - (optional, only for family study) run additional installation scripts. 
         - `./teleop_station_setup.sh`
@@ -48,10 +52,11 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
 
 7. Setup WiFi
     - After a reboot, navigate to http://10.99.0.1 on a web browser, and setup WiFi.
+    * if the webpage only displays "Looking for Jibo Station...", then run `sudo ./add_wifi.sh`
 
-~~8. Setup RemotePC
-    - run `remotepc`
-        - ID: robots.deployment@gmail.com
+8. Setup RemotePC
+    - run `remotepc &`
+      - ID: robots.deployment@gmail.com
       - Password: (on LastPass)
       
 9. Setup TeamViewer
