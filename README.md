@@ -48,23 +48,24 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
         - `./teleop_station_setup.sh`
         - When prompted, setup realVNC (ID: robots.deployment@gmail.com, Pass: (on LastPass))
         - `cd family_setup. && ./family_extra_install.sh`
-    - reboot
 
-7. Setup WiFi
-    - After a reboot, navigate to http://10.99.0.1 on a web browser, and setup WiFi.
-    * if the webpage only displays "Looking for Jibo Station...", then run `sudo ./add_wifi.sh`
-
-8. Setup RemotePC
+7. Setup RemotePC
     - run `remotepc &`
       - ID: robots.deployment@gmail.com
-      - Password: (on LastPass)
+      - Password: (on LastPass, but also copied to clipboard at the end of the installation script)
+    - reboot
+
+8. Setup WiFi
+    - After a reboot, navigate to http://10.99.0.1 on a web browser, and setup WiFi.
+    * if the webpage only displays "Looking for Jibo Station...", then run `sudo ./add_wifi.sh`
       
 9. Setup TeamViewer
     - `sudo teamviewer setup`
       - ID: robots.deployment@gmail.com
       - Password: (on LastPass)
-    - **Don't forget to check email to add the NUC as trusted device.** If you don't do this, you won't be able to log in.
-    - Given an option, select 'y' to add the NUC to the account.
+    - **Check robots.deployment@gmail.com inbox to approve the NUC as trusted device.** If you don't do this, you won't be able to log in.
+    - After approving via the link in the email, log in again.
+    - Select 'y' to add the NUC to My Computer group.
 
 10. Test
     - Test ssh into the new NUC from another machine on the same Network.
