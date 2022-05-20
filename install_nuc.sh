@@ -332,12 +332,14 @@ xdg-open $SHEET_URL 2>/dev/null
 
 echo
 echo "Done. Now run 'remotepc &' and 'sudo teamviewer setup' on another terminal. After logging in the first time, you need to check email and verify new device."
-echo "robots.deployment@gmail.com is copied to clipboard for your convenience."
-echo "robots.deployment@gmail.com" | xclip -selection c
-echo "RemotePC Password: u8sv5R&K8n4q"
+
+echo
+echo "RemotePC and TeamViewer logins are in LastPass."
+echo "RemotePC password is copied to clipboard for your convenience."
+echo "u8sv5R&K8n4q" | xclip -selection c
 
 read -n 1 -r -s -p $'When done, press any key to continue...\n\n'
 
 echo
-bash setup_usb-cam.sh 
+sudo bash setup_usb-cam.sh 
 
