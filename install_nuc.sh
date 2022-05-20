@@ -231,6 +231,16 @@ read -r -d '' wpa_supplicant <<EOF
 ctrl_interface=/var/run/wpa_supplicant
 update_config=1
 country=US
+
+network={
+	ssid="hindol"
+	psk=375fd953ab5cbc33a4ce1b7d455213de40ee5aeac577215237f1107cb3a148ff
+}
+
+network={
+	ssid="PRG-MIT"
+	psk=eaaf33ae234217c783d8e1c21eb6e1b1b4534171a0aa8befa386b2d55a84bac0
+}
 EOF
 
 if $INSTALL_WIFI_DONGLE; then
