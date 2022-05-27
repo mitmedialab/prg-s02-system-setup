@@ -241,6 +241,11 @@ network={
 	ssid="PRG-MIT"
 	psk=eaaf33ae234217c783d8e1c21eb6e1b1b4534171a0aa8befa386b2d55a84bac0
 }
+
+network={
+	ssid="SquidDisco 5GHz"
+	psk=cf0ba3aceef787616471c206c3e5f6fe400fad78a65c5bade078e5ed20e264f4
+}
 EOF
 
 if $INSTALL_WIFI_DONGLE; then
@@ -328,17 +333,17 @@ sudo apt install -y teamviewer &&
 #teamviewer &
 #sudo teamviewer setup
 
-echo
-echo -e "${G}Copy the following computer hostname and wlan MAC address to the provided URL${N}"
-echo -e "${G}If the hostname is not in \"s02-nXX-nux-YY\" format, change it in /etc/hostname${N}"
-cat /etc/hostname
-wlan1=`ifconfig wlp58s0 2>/dev/null | awk '/HWaddr/ {print $5}'`
-wlan2=`ifconfig wlp0s20f3 2>/dev/null | awk '/HWaddr/ {print $5}'`
-eth=`ifconfig eno1 2>/dev/null | awk '/HWaddr/ {print $5}'`
+# echo
+# echo -e "${G}Copy the following computer hostname and wlan MAC address to the provided URL${N}"
+# echo -e "${G}If the hostname is not in \"s02-nXX-nux-YY\" format, change it in /etc/hostname${N}"
+# cat /etc/hostname
+# wlan1=`ifconfig wlp58s0 2>/dev/null | awk '/HWaddr/ {print $5}'`
+# wlan2=`ifconfig wlp0s20f3 2>/dev/null | awk '/HWaddr/ {print $5}'`
+# eth=`ifconfig eno1 2>/dev/null | awk '/HWaddr/ {print $5}'`
 
-echo "WLAN  $wlan1$wlan2"
-echo "ETH   $eth"
-xdg-open $SHEET_URL 2>/dev/null
+# echo "WLAN  $wlan1$wlan2"
+# echo "ETH   $eth"
+# xdg-open $SHEET_URL 2>/dev/null
 
 echo
 echo "Done. Now run 'remotepc &' and 'sudo teamviewer setup' on another terminal. After logging in the first time, you need to check email and verify new device."
