@@ -103,7 +103,7 @@ sudo apt-get update &&
 
 echo
 echo -e "${G}install packages${N}"
-sudo apt-get -y install vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip hostapd haveged dnsmasq wget lsb-release&&
+sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip hostapd haveged dnsmasq wget lsb-release&&
 
 #echo
 #echo -e "${G}Install packages${N}"
