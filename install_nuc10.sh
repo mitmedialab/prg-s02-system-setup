@@ -4,11 +4,15 @@ N='\033[0m'
 source src/s02-machine-commands.sh
 
 ROOT_DIR=$PWD
+if [[ ! -e ./rc-local.service ]]; then
+    echo "run this in the top directory of the checked-out prg-s02-system-setup repo"
+    exit 1
+fi
 
 echo
 echo -e "${G}Set user to execute sudo commands without password${N}"
 line="$USER ALL=(ALL) NOPASSWD: ALL"
-sudo grep -qxF "$line" /etc/sudoers || sudo sed -i '27i '"$line"'' /etc/sudoers  &&
+sudo grep -qxF "$line" /etc/sudoers || sudo sed -i '51i '"$line"'' /etc/sudoers  &&
 echo "OK"
 
 LOC_SCHOOL="1"
@@ -45,12 +49,12 @@ echo
 echo -e "${G}Setup rc.local${N}"
 FILE="/etc/rc.local"
 if [[ ! -f "$FILE" ]]; then 
-	sudo cp rc-local.service /etc/systemd/system/rc-local.service
-	echo "#/bin/sh -e" | sudo tee /etc/rc.local
-	echo "" | sudo tee -a /etc/rc.local
-	echo "exit 0" | sudo tee /etc/rc.local
-	sudo systemctl enable rc-local
-	echo "OK"
+sudo cp rc-local.service /etc/systemd/system/rc-local.service
+    echo "#!/bin/sh -e" | sudo tee /etc/rc.local
+    echo "" | sudo tee -a /etc/rc.local
+    echo "exit 0" | sudo tee /etc/rc.local
+    sudo systemctl enable rc-local
+    echo "OK"
 fi
 
 echo
@@ -88,6 +92,7 @@ echo "OK"
 echo
 echo -e "${G}Add ssh keys${N}"
    mkdir -p ~/.ssh
+   chmod go-rwx ~/.ssh
    echo "adding haewon's ssh key"
    sudo grep -qxF "$haewons_ssh_key" ~/.ssh/authorized_keys || echo "$haewons_ssh_key" >> ~/.ssh/authorized_keys
    echo "adding brayden's ssh key"
@@ -103,7 +108,7 @@ sudo apt-get update &&
 
 echo
 echo -e "${G}install packages${N}"
-sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip hostapd haveged dnsmasq wget lsb-release&&
+sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip wget lsb-release emacs-nox htop &&
 
 #echo
 #echo -e "${G}Install packages${N}"
@@ -112,8 +117,8 @@ sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certific
 echo
 echo -e "${G}Install openssh-server${N}"
 sudo apt-get -y install openssh-server &&
-sudo systemctl enable ssh
-sudo systemctl start ssh
+#sudo systemctl enable ssh
+#sudo systemctl start ssh
 
 echo
 echo -e "${G}Install low version Chromium for Jibo Console${N}"
@@ -177,8 +182,7 @@ echo "OK"
 echo
 echo -e "${G}Setup VPN${N}"
 tar zxvf vpn-s02.tar.gz -C ~/
-cd ~/vpn && sudo ./install.sh 
-cd $ROOT_DIR
+(cd ~/vpn && sudo ./install.sh)
 echo "OK"
 
 
@@ -237,7 +241,7 @@ while true; do
     read -p "Are you installing a WiFi dongle? [Y/n]: " yn
     case $yn in
         [Nn]* ) INSTALL_WIFI_DONGLE=false; break;;
-        [Yy]* ) read -n 1 -r -s -p  "Okay, setting up WiFi Dongle. Connect WiFi USB Dongle and hit enter..."; break;;
+        [Yy]*|"" ) read -n 1 -r -s -p  "Okay, setting up WiFi Dongle. Connect WiFi USB Dongle and hit enter..."; break;;
         * ) echo "Please answer yes or no.";;
     esac
 done
@@ -246,7 +250,7 @@ read -r -d '' wifi_interfaces_config <<EOF
 iface wlan0 inet static
 address 10.99.0.1
 netmask 255.255.255.0
-gateway 10.99.0.1
+iface wlan1 inet dhcp
 EOF
 
 read -r -d '' wifi_sysctl_config <<EOF
@@ -272,7 +276,13 @@ rsn_pairwise=CCMP
 EOF
 
 read -r -d '' wifi_dnsmasq_config <<EOF
+## divert DNS part of dnsmasq
+#port=533
+##that did not work, broke routing somehow???
+## this seemed to do the trick: https://unix.stackexchange.com/a/464238
 interface=wlan0
+bind-interfaces
+except-interface=lo
 dhcp-range=10.99.0.2,10.99.0.20,255.255.255.0,24h
 no-hosts
 addn-hosts=/etc/hosts.dnsmasq
@@ -304,12 +314,15 @@ EOF
 if $INSTALL_WIFI_DONGLE; then
    if [ ! -d "/usr/local/jibo-station-wifi-service" ]; then
 
+      echo "installing additional networking packages"
+      sudo apt install net-tools iw ifupdown ifplugd resolvconf hostapd haveged dnsmasq
+
       # disable the unique network interface names, go back to wlan0 & wlan1
       echo "disabling complex names"
       sudo ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
       echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces
-      sudo sed -i~ 's/auto lo/auto lo wlan0/' /etc/network/interfaces
+      sudo sed -i~ 's/auto lo/auto lo wlan0 wlan1/' /etc/network/interfaces
 
       # cat /etc/network/interfaces
       # echo
@@ -319,42 +332,57 @@ if $INSTALL_WIFI_DONGLE; then
       #  iface wlan0 inet static
       #  address 10.99.0.1
       #  netmask 255.255.255.0
-      #  gateway 10.99.0.1"
+      #  iface wlan1 inet dhcp"
 
-      echo "$wifi_sysctl_config" | sudo tee -a /etc/sysctl.conf
+      if ! egrep -q "^net.ipv4.ip_forward=1"; then
+	  echo "$wifi_sysctl_config" | sudo tee -a /etc/sysctl.conf
+      fi
 
       echo "$wifi_hostapd_config" | sudo tee /etc/hostapd/hostapd.conf
 
       echo "DAEMON_CONF=/etc/hostapd/hostapd.conf" | sudo tee -a /etc/default/hostapd
 
-      sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
-      echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
-      sudo touch /etc/hosts.dnsmasq
+      if [ ! -e /etc/dnsmasq.conf.dist ]; then
+	  sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
+	  echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
+	  sudo touch /etc/hosts.dnsmasq
+      fi
 
-      sudo sed -i~ '/^Requires=network.target/a After=network-online.target\nWants=network-online.target' /lib/systemd/system/dnsmasq.service
-
-      sudo cp /lib/systemd/system/dnsmasq.service  /etc/systemd/system/
+      if [ ! -e /etc/systemd/system/dnsmasq.service ]; then
+	  sudo cp -p /lib/systemd/system/dnsmasq.service /etc/systemd/system/dnsmasq.service
+	  sudo sed -i~ '/^Requires=network.target/a After=network-online.target\nWants=network-online.target' /etc/systemd/system/dnsmasq.service
+      fi
 
       sudo sed -i~ '/^exit 0.*/e cat wifi_rclocal_config.txt' /etc/rc.local
 
-      echo "installing dhcpcd5"
-      sudo apt update
-      sudo apt install dhcpcd5
-      sudo systemctl enable dhcpcd
+      #not anymore, using native dhcpclient, handled by ifupdown and 'dhcp' option in /etc/network/interfaces
+      #echo "installing dhcpcd5"
+      #sudo apt update
+      #sudo apt install dhcpcd5
+      #sudo systemctl enable dhcpcd
+
+      if ! grep -q "nameserver 8.8.8.8" /etc/resolvconf/resolv.conf.d/head; then
+	  echo "adding google nameservers to head of default resolv.conf file"
+	  echo "nameserver 8.8.8.8\nnameserver 8.8.4.4" | tee -a /etc/resolvconf/resolv.conf.d/head >> resolv.conf.d/
+      fi
+      if ! egrep -q wlan1 /etc/default/ifplugd; then
+	  sudo sed -i~ '/INTERFACES=""/INTERFACES="wlan1"/' /etc/default/ifplugd
+      fi
 
       echo "configuring wpa_supplicant"
       echo "$wpa_supplicant" | sudo tee /etc/wpa_supplicant.conf
       
-      sudo mv wpa_supplicant.service /etc/systemd/system/
+      sudo cp -p wpa_supplicant.service.nuc10 /etc/systemd/system/wpa_supplicant.service
 
       # probably not needed
       sudo systemctl enable wpa_supplicant.service
 
-      sudo git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
-      sudo chown -R prg /usr/local/jibo-station-wifi-service
-      cd /usr/local/jibo-station-wifi-service && ./install.sh
-
-      cd $ROOT_DIR
+      if [ ! -e /usr/local/jibo-station-wifi-service ]; then
+	  sudo mkdir /usr/local/jibo-station-wifi-service
+	  sudo chown prg /usr/local/jibo-station-wifi-service
+	  git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
+	  (cd /usr/local/jibo-station-wifi-service && ./install.sh)
+      fi
 
       # disable Network Manager
       #systemctl stop NetworkManager  # nah! probably don't wanna do this
@@ -362,7 +390,6 @@ if $INSTALL_WIFI_DONGLE; then
          echo "disabling $f"
          sudo systemctl disable $f
       done
-
    fi
 fi
 
