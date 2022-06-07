@@ -1,3 +1,6 @@
 .DS_Store
-chrome-linux
-chrome-linux.zip
+*~
+/chrome-linux
+/chrome-linux.zip
+/remotepc.deb
+/teamviewer_amd64.deb
