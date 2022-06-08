@@ -119,9 +119,7 @@ sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certific
 
 echo
 echo -e "${G}Install openssh-server${N}"
-sudo apt-get -y install openssh-server &&
-#sudo systemctl enable ssh
-#sudo systemctl start ssh
+sudo apt-get -y install openssh-server
 
 echo
 echo -e "${G}Install low version Chromium for Jibo Console${N}"
@@ -240,7 +238,7 @@ sudo bash setup_usb-cam.sh
 
 if [ -d "/usr/local/jibo-station-wifi-service" ]; then
     echo "Note: It looks like jibo-station-wifi-service has already been installed"
-    echo "      So you might wany to say 'No' to the next question"
+    echo "      So you might want to say 'No' to the next question"
 fi
 
 # WiFi setup
@@ -321,6 +319,12 @@ network={
 EOF
 
 if $INSTALL_WIFI_DONGLE; then
+      # install dnsmasq conf file before installing dnsmasq package so as to avoid an ugly error message
+      if [ ! -e /etc/dnsmasq.conf ]; then
+	  echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
+	  sudo touch /etc/hosts.dnsmasq
+      fi
+
       echo "installing additional networking packages"
       sudo apt install -y net-tools iw ifupdown ifplugd resolvconf hostapd haveged libhavege2 dnsmasq
 
@@ -333,16 +337,6 @@ if $INSTALL_WIFI_DONGLE; then
 	  sudo sed -i~ 's/auto lo/auto lo wlan0/' /etc/network/interfaces
       fi
 
-      # cat /etc/network/interfaces
-      # echo
-      # echo "/etc/network/interfaces should look like this:"
-      # echo "auto lo wlan0
-      #  iface lo inet loopback
-      #  iface wlan0 inet static
-      #  address 10.99.0.1
-      #  netmask 255.255.255.0
-      #  iface wlan1 inet dhcp"
-
       if ! egrep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
 	  echo "$wifi_sysctl_config" | sudo tee -a /etc/sysctl.conf >/dev/null
       fi
@@ -352,11 +346,11 @@ if $INSTALL_WIFI_DONGLE; then
       sudo systemctl unmask hostapd.service
       sudo systemctl enable hostapd.service
 
-      if [ ! -e /etc/dnsmasq.conf.dist ]; then
-	  sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
-	  echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
-	  sudo touch /etc/hosts.dnsmasq
-      fi
+      #if [ ! -e /etc/dnsmasq.conf.dist ]; then
+      #	  sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
+      #	  echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
+      #	  sudo touch /etc/hosts.dnsmasq
+      #fi
 
       if [ ! -e /etc/systemd/system/dnsmasq.service ]; then
 	  sudo cp -p /lib/systemd/system/dnsmasq.service /etc/systemd/system/dnsmasq.service
@@ -371,12 +365,6 @@ if $INSTALL_WIFI_DONGLE; then
 	      echo "Error: /etc/rc.local doesn't end with 'exit 0' line"
 	  fi
       fi
-
-      #not anymore, using native dhcpclient, handled by ifupdown and 'dhcp' option in /etc/network/interfaces
-      #echo "installing dhcpcd5"
-      #sudo apt update
-      #sudo apt install dhcpcd5
-      #sudo systemctl enable dhcpcd
 
       if ! grep -q "nameserver 8.8.8.8" /etc/resolvconf/resolv.conf.d/head; then
 	  echo "adding google nameservers to head of default resolv.conf file"
