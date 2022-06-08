@@ -1,3 +1,5 @@
+#!/bin/bash
+
 G='\033[0;32m'
 N='\033[0m'
 
@@ -52,7 +54,8 @@ if [[ ! -f "$FILE" ]]; then
 sudo cp rc-local.service /etc/systemd/system/rc-local.service
     echo "#!/bin/sh -e" | sudo tee /etc/rc.local
     echo "" | sudo tee -a /etc/rc.local
-    echo "exit 0" | sudo tee /etc/rc.local
+    echo "exit 0" | sudo tee -a /etc/rc.local
+    sudo chmod +x /etc/rc.local
     sudo systemctl enable rc-local
     echo "OK"
 fi
@@ -108,7 +111,7 @@ sudo apt-get update &&
 
 echo
 echo -e "${G}install packages${N}"
-sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip wget lsb-release emacs-nox htop &&
+sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip wget lsb-release libminizip1 libxcb-xinerama0 emacs-nox htop &&
 
 #echo
 #echo -e "${G}Install packages${N}"
@@ -152,7 +155,7 @@ echo -e "${G}apt-get update${N}"
 sudo apt-get update &&
 echo
 echo -e "${G}Install Docker Engine - Community${N}"
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 echo
 echo -e "${G}Verify Docker Engine is successfully installed${N}"
@@ -235,6 +238,11 @@ echo
 sudo bash setup_usb-cam.sh 
 
 
+if [ -d "/usr/local/jibo-station-wifi-service" ]; then
+    echo "Note: It looks like jibo-station-wifi-service has already been installed"
+    echo "      So you might wany to say 'No' to the next question"
+fi
+
 # WiFi setup
 INSTALL_WIFI_DONGLE=true
 while true; do
@@ -312,17 +320,17 @@ network={
 EOF
 
 if $INSTALL_WIFI_DONGLE; then
-   if [ ! -d "/usr/local/jibo-station-wifi-service" ]; then
-
       echo "installing additional networking packages"
-      sudo apt install net-tools iw ifupdown ifplugd resolvconf hostapd haveged dnsmasq
+      sudo apt install -y net-tools iw ifupdown ifplugd resolvconf hostapd haveged libhavege2 dnsmasq
 
       # disable the unique network interface names, go back to wlan0 & wlan1
       echo "disabling complex names"
       sudo ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
-      echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces
-      sudo sed -i~ 's/auto lo/auto lo wlan0 wlan1/' /etc/network/interfaces
+      if ! grep -q wlan1 /etc/network/interfaces; then
+	  echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces 1>/dev/null
+	  sudo sed -i~ 's/auto lo/auto lo wlan0 wlan1/' /etc/network/interfaces
+      fi
 
       # cat /etc/network/interfaces
       # echo
@@ -334,13 +342,14 @@ if $INSTALL_WIFI_DONGLE; then
       #  netmask 255.255.255.0
       #  iface wlan1 inet dhcp"
 
-      if ! egrep -q "^net.ipv4.ip_forward=1"; then
-	  echo "$wifi_sysctl_config" | sudo tee -a /etc/sysctl.conf
+      if ! egrep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
+	  echo "$wifi_sysctl_config" | sudo tee -a /etc/sysctl.conf >/dev/null
       fi
 
-      echo "$wifi_hostapd_config" | sudo tee /etc/hostapd/hostapd.conf
-
-      echo "DAEMON_CONF=/etc/hostapd/hostapd.conf" | sudo tee -a /etc/default/hostapd
+      echo "$wifi_hostapd_config" | sudo tee /etc/hostapd/hostapd.conf >/dev/null
+      echo "DAEMON_CONF=/etc/hostapd/hostapd.conf" | sudo tee -a /etc/default/hostapd >/dev/null
+      sudo systemctl unmask hostapd.service
+      sudo systemctl enable hostapd.service
 
       if [ ! -e /etc/dnsmasq.conf.dist ]; then
 	  sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
@@ -353,7 +362,14 @@ if $INSTALL_WIFI_DONGLE; then
 	  sudo sed -i~ '/^Requires=network.target/a After=network-online.target\nWants=network-online.target' /etc/systemd/system/dnsmasq.service
       fi
 
-      sudo sed -i~ '/^exit 0.*/e cat wifi_rclocal_config.txt' /etc/rc.local
+      if ! egrep -q wlan1 /etc/rc.local; then
+	  if [[ $(tail -1 /etc/rc.local) = "exit 0" ]]; then
+	      NEW_RC_LOCAL="$(head -n -1 /etc/rc.local; cat wifi_rclocal_config.txt; echo ''; echo 'exit 0')"
+	      echo "$NEW_RC_LOCAL" | sudo tee /etc/rc.local >/dev/null
+	  else
+	      echo "Error: /etc/rc.local doesn't end with 'exit 0' line"
+	  fi
+      fi
 
       #not anymore, using native dhcpclient, handled by ifupdown and 'dhcp' option in /etc/network/interfaces
       #echo "installing dhcpcd5"
@@ -363,14 +379,15 @@ if $INSTALL_WIFI_DONGLE; then
 
       if ! grep -q "nameserver 8.8.8.8" /etc/resolvconf/resolv.conf.d/head; then
 	  echo "adding google nameservers to head of default resolv.conf file"
-	  echo "nameserver 8.8.8.8\nnameserver 8.8.4.4" | tee -a /etc/resolvconf/resolv.conf.d/head >> resolv.conf.d/
+	  echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
+	  echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
       fi
       if ! egrep -q wlan1 /etc/default/ifplugd; then
-	  sudo sed -i~ '/INTERFACES=""/INTERFACES="wlan1"/' /etc/default/ifplugd
+	  sudo sed -i~ 's/INTERFACES=""/INTERFACES="wlan1"/' /etc/default/ifplugd
       fi
 
       echo "configuring wpa_supplicant"
-      echo "$wpa_supplicant" | sudo tee /etc/wpa_supplicant.conf
+      echo "$wpa_supplicant" | sudo tee /etc/wpa_supplicant.conf >/dev/null
       
       sudo cp -p wpa_supplicant.service.nuc10 /etc/systemd/system/wpa_supplicant.service
 
@@ -390,7 +407,6 @@ if $INSTALL_WIFI_DONGLE; then
          echo "disabling $f"
          sudo systemctl disable $f
       done
-   fi
 fi
 
 read -p "S02 NUC setup finished. Reboot? [y/n] " yn
