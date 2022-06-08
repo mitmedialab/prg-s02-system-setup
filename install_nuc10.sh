@@ -184,6 +184,7 @@ echo
 echo -e "${G}Setup VPN${N}"
 tar zxvf vpn-s02.tar.gz -C ~/
 (cd ~/vpn && sudo ./install.sh)
+sudo chown root:root /etc/systemd/system/vpn-client-prg.service
 echo "OK"
 
 
@@ -313,8 +314,8 @@ network={
 }
 
 network={
-	ssid="SquidDisco 5GHz"
-	psk=cf0ba3aceef787616471c206c3e5f6fe400fad78a65c5bade078e5ed20e264f4
+	ssid="SquidDisco"
+        psk=a54e9bac812a27aa7fee335d6971cf07e51d88132201e5cd11ea50d4b8c0f5fe
 }
 EOF
 
@@ -379,6 +380,7 @@ if $INSTALL_WIFI_DONGLE; then
       echo "$wpa_supplicant" | sudo tee /etc/wpa_supplicant.conf >/dev/null
       
       sudo cp -p wpa_supplicant.service.nuc10 /etc/systemd/system/wpa_supplicant.service
+      sudo chown root:root /etc/systemd/system/wpa_supplicant.service
 
       # probably not needed
       sudo systemctl enable wpa_supplicant.service
@@ -387,7 +389,7 @@ if $INSTALL_WIFI_DONGLE; then
 	  sudo mkdir /usr/local/jibo-station-wifi-service
 	  sudo chown prg /usr/local/jibo-station-wifi-service
 	  git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
-	  (cd /usr/local/jibo-station-wifi-service && ./install.sh)
+	  (cd /usr/local/jibo-station-wifi-service && JSWS_NO_REBOOT_PROMPT=1 ./install.sh)
       fi
 
       # disable Network Manager
