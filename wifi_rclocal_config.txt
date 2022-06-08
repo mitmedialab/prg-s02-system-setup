@@ -12,4 +12,3 @@ echo "rc.local has decided the ethername interface name is $ethname"
 iptables -t nat -A POSTROUTING -o $ethname -j MASQUERADE
 iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i wlan0 -o $ethname -j ACCEPT
-
