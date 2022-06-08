@@ -255,6 +255,7 @@ while true; do
 done
 
 read -r -d '' wifi_interfaces_config <<EOF
+allow-hotplug wlan1
 iface wlan0 inet static
 address 10.99.0.1
 netmask 255.255.255.0
@@ -329,7 +330,7 @@ if $INSTALL_WIFI_DONGLE; then
 
       if ! grep -q wlan1 /etc/network/interfaces; then
 	  echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces 1>/dev/null
-	  sudo sed -i~ 's/auto lo/auto lo wlan0 wlan1/' /etc/network/interfaces
+	  sudo sed -i~ 's/auto lo/auto lo wlan0/' /etc/network/interfaces
       fi
 
       # cat /etc/network/interfaces
