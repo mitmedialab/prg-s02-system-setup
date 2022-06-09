@@ -238,8 +238,10 @@ sudo bash setup_usb-cam.sh
 
 
 if [ -d "/usr/local/jibo-station-wifi-service" ]; then
+    echo ""
     echo "Note: It looks like jibo-station-wifi-service has already been installed"
     echo "      So you might want to say 'No' to the next question"
+    echo ""
 fi
 
 # WiFi setup
@@ -254,6 +256,7 @@ while true; do
 done
 
 read -r -d '' wifi_interfaces_config <<EOF
+auto lo wlan0
 allow-hotplug wlan1
 iface wlan0 inet static
 address 10.99.0.1
@@ -320,12 +323,6 @@ network={
 EOF
 
 if $INSTALL_WIFI_DONGLE; then
-      # install dnsmasq conf file before installing dnsmasq package so as to avoid an ugly error message
-      if [ ! -e /etc/dnsmasq.conf ]; then
-	  echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
-	  sudo touch /etc/hosts.dnsmasq
-      fi
-
       echo "installing additional networking packages"
       sudo apt install -y net-tools iw ifupdown ifplugd resolvconf hostapd haveged libhavege2 dnsmasq
 
@@ -335,7 +332,6 @@ if $INSTALL_WIFI_DONGLE; then
 
       if ! grep -q wlan1 /etc/network/interfaces; then
 	  echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces 1>/dev/null
-	  sudo sed -i~ 's/auto lo/auto lo wlan0/' /etc/network/interfaces
       fi
 
       if ! egrep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
@@ -347,11 +343,16 @@ if $INSTALL_WIFI_DONGLE; then
       sudo systemctl unmask hostapd.service
       sudo systemctl enable hostapd.service
 
-      #if [ ! -e /etc/dnsmasq.conf.dist ]; then
-      #	  sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
-      #	  echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
-      #	  sudo touch /etc/hosts.dnsmasq
-      #fi
+      echo ""
+      echo "the error about dnsmasq conflicting on port 53 is ignorable"
+      echo "it'll be fixed when the system reboots with the new dnsmasq.conf file in place"
+      echo ""
+
+      if [ ! -e /etc/dnsmasq.conf.dist ]; then
+      	  sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
+      	  echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
+      	  sudo touch /etc/hosts.dnsmasq
+      fi
 
       if [ ! -e /etc/systemd/system/dnsmasq.service ]; then
 	  sudo cp -p /lib/systemd/system/dnsmasq.service /etc/systemd/system/dnsmasq.service
