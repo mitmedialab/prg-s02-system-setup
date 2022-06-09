@@ -54,7 +54,7 @@
     - Docker Swarm: [http://prg-webhost.media.mit.edu:8889](http://prg-webhost.media.mit.edu:8889)
     - RemotePC and Teamviewer
 
-## == Full Manual Installaion Guide ==
+## == Full Manual Installation Guide ==
 
 The following instruction assumes you have a bootable Ubuntu intallation USB thumbdrive. We use 16.04 LTS desktop image built for NUCs [http://people.canonical.com/~platform/images/nuc/pc-dawson-xenial-amd64-m4-20180507-32.iso?_ga=2.58458346.1505674856.1612557677-900696344.1612557677].
 
