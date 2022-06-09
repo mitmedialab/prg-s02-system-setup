@@ -1,8 +1,62 @@
 # prg-s02-nuc-setup
 
-# Intel NUC & Ubuntu
+# Intel NUC 
 
-The following instruction assumes you have a bootable Ubuntu intallation USB thumbdrive.
+## == Installation via Restoring Clone Image Guide ==
+
+(Skip steps 1-3 if you have access to a bootable clone image disk)
+1. Download the clone image (image link placeholder).
+2. Prepare a USB drive at least 16GB formatted with NTFS filesystem. 
+    - Follow the guide for [creating a bootable Clonezilla Live disk](https://clonezilla.org/clonezilla-live.php) 
+    - If you're creating it on ubuntu, mount the USB drive and run
+       `unzip <clone-image.zip> -d <USB-drive-mount-path>`
+       
+3. On a new NUC, connect the bootable USB drive. Power up.
+4. The NUC should automatically boot into Clonezilla and execute "Hae Won's S02 Recipe" fully unattended to restore the image on to the new NUC's SSD. It takes around 10 minutes, go grab a drink.
+5. When restoring is completed, select "Poweroff". Wait till the NUC is completely powered down.
+
+6. Unmount the USB drive. 
+    - **Connect WiFi dongle.**
+    - **Connect Webcam.**
+    - Power on the NUC.
+
+7. Boot into the BIOS menu by pressing F2.
+    - Change the UEFI boot order so that `ubuntu` is above SAMSUNG...
+    - Go to Advanced > Power > After power failure, select `power on` instead of ‘stay off’. 
+    - Go to `Boot` and disable `Secure Boot` in UEFI boot option.
+    - Save and exit with F10.
+    - NUC will now boot into Ubuntu.
+
+8. Post cloning tasks
+    - If you forgot to plug in the WiFi dongle or the webcam, do so and reboot before the next steps.
+    - Open terminal and run...
+        ```
+        cd ~/prg-s02-system-setup
+        git pull
+        ./post-clone.sh <new-hostname, e.g., s02-n00-nuc-101>
+        ```
+    - The script will first change the hostname (check message reporting successful).
+    - Next, it will join docker swarm and prompt you to select which swarm to join. 
+    - Lastly, it will install RemotePC and Teamviewer. Follow the instructions on the screen.
+        - Open a new terminal window and setup RemotePC. 
+            - `remotepc &`
+            - It will prompt you to accept the terms. Accept.
+            - Login. Credentials are on LastPass, and the password is copied to the clipboard, so simply CTRL-V. 
+        - Setup Teamviewer
+            - `sudo teamviewer setup`
+            - 'n' to located in Korea, 'y' to accept terms.
+            - Login. Credentials are on LastPass
+                - After the first login, robots.deployment@gmail.com will receive a link to add the device as trusted. Click the link and accept.
+            - Re-login. 'y' to add the device to "My Computers" list.
+     
+9. All done. Verify the followings work correctly...
+    - VPN: [http://rover.jibo.media.mit.edu:1967](http://rover.jibo.media.mit.edu:1967)
+    - Docker Swarm: [http://prg-webhost.media.mit.edu:8889](http://prg-webhost.media.mit.edu:8889)
+    - RemotePC and Teamviewer
+
+## == Full Manual Installaion Guide ==
+
+The following instruction assumes you have a bootable Ubuntu intallation USB thumbdrive. We use 16.04 LTS desktop image built for NUCs [http://people.canonical.com/~platform/images/nuc/pc-dawson-xenial-amd64-m4-20180507-32.iso?_ga=2.58458346.1505674856.1612557677-900696344.1612557677].
 
 1. Connect NUC.
     - Insert the intallation USB thumbdrive.
@@ -14,10 +68,10 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
 3. Setup auto start when power plugged in
     - Press F2 instantly when powering on to enter BIOS Settings. 
     - After entering BIOS settings, go to advanced > power > after power failure, select ‘power on’ instead of ‘stay off’. 
-    - (optional) Go to ‘Boot’ and disable ‘Secure Boot’ in UEFI boot option.
+    - Go to ‘Boot’ and disable ‘Secure Boot’ in UEFI boot option.
     - Save and exit with F10.
 
-4. Install Ubuntu. We use 16.04 LTS desktop image built for NUCs [http://people.canonical.com/~platform/images/nuc/pc-dawson-xenial-amd64-m4-20180507-32.iso?_ga=2.58458346.1505674856.1612557677-900696344.1612557677].
+4. Install Ubuntu. 
     - After a reboot, unplug the USB thumbdrive and connect the WiFi Adapter.
     - Settings
       - User Name: prg
