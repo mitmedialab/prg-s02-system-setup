@@ -39,7 +39,20 @@ echo -e "${G}Joining swarm as a new node${N}"
 
 # re-setup usb cam docker container
 echo
+echo -e "${G}Setup USB CAM docker container${N}"
 sudo bash setup_usb-cam.sh 
+
+# setup docker restart cron job
+echo
+echo -e "${G}Setup Restart Docker Timer${N}"
+if ! sudo grep -q "00 7 \* \* \*    /bin/systemctl restart docker" /var/spool/cron/crontabs/root; then 
+   echo -e "$(sudo crontab -u root -l)\n00 7 * * *    /bin/systemctl restart docker" | sudo crontab -u root -
+fi
+echo -e "$(sudo crontab -u root -l | grep -v '/sbin/reboot')" | sudo crontab -u root -
+echo
+sudo cat /var/spool/cron/crontabs/root
+echo
+
 
 # install remotepc and teamviewer
 echo
