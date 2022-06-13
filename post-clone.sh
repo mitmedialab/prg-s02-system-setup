@@ -45,7 +45,7 @@ sudo bash setup_usb-cam.sh
 # setup docker restart cron job
 echo
 echo -e "${G}Setup Restart Docker Timer${N}"
-if ! sudo grep -q "00 7 \* \* \*    /bin/systemctl restart docker" /var/spool/cron/crontabs/root; then 
+if ! sudo grep -q "00 7 \* \* \* \+/bin/systemctl restart docker" /var/spool/cron/crontabs/root; then 
    echo -e "$(sudo crontab -u root -l)\n00 7 * * *    /bin/systemctl restart docker" | sudo crontab -u root -
 fi
 echo -e "$(sudo crontab -u root -l | grep -v '/sbin/reboot')" | sudo crontab -u root -
