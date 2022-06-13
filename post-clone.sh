@@ -37,6 +37,10 @@ echo
 echo -e "${G}Joining swarm as a new node${N}"
 ./switch_swarm.sh
 
+# re-setup usb cam docker container
+echo
+sudo bash setup_usb-cam.sh 
+
 # install remotepc and teamviewer
 echo
 echo -e "${G}Install and Log-in to RemotePC${N}"
