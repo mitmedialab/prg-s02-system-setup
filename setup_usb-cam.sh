@@ -3,7 +3,7 @@ while true; do
     read -p "Proceed with setting up USB CAM docker container? [Y/n]: " yn
     case $yn in
         [Nn]* ) INSTALL_USBCAM_CONTAINER=false; echo "Please run ./setup_usb-cam.sh later"; break;;
-        [Yy]* ) read -n 1 -r -s -p  "Okay, setting up WiFi Dongle. Connect WiFi USB Dongle and hit enter..."; break;;
+        [Yy]*|"" ) read -n 1 -r -s -p  "Okay, setting up USB CAM docker container. Connect USB webcam and hit enter..."; break;;
         * ) echo "Please answer yes or no.";;
     esac
 done
@@ -11,8 +11,6 @@ done
 if $INSTALL_USBCAM_CONTAINER; then
 	docker rm -f s02-ros_usb-cam
 	
-	echo
-	read -n 1 -r -s -p $'Connect USB camera and press any key to continue...\n'
 	echo
 	echo -e "${G}Run USB_CAM Docker Container${N}"
 	ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
