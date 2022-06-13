@@ -78,8 +78,11 @@ echo -e "${G}Setup Reboot Timer${N}"
 if ! sudo grep -q "\*/1 \* \* \* \*    /bin/systemctl start docker" /var/spool/cron/crontabs/root; then 
    echo -e "$(sudo crontab -u root -l)\n*/1 * * * *    /bin/systemctl start docker" | sudo crontab -u root -
 fi
-if ! sudo grep -q "00 7 \* \* \*    /sbin/reboot" /var/spool/cron/crontabs/root; then 
-   echo -e "$(sudo crontab -u root -l)\n00 7 * * *    /sbin/reboot" | sudo crontab -u root -
+if ! sudo grep -q "00 7 \* \* \*    /bin/systemctl restart docker" /var/spool/cron/crontabs/root; then 
+   echo -e "$(sudo crontab -u root -l)\n00 7 \* \* \*    /bin/systemctl restart docker" | sudo crontab -u root -
+fi
+if ! sudo grep -q "#00 7 \* \* \*    /sbin/reboot" /var/spool/cron/crontabs/root; then 
+   echo -e "$(sudo crontab -u root -l)\n#00 7 * * *    /sbin/reboot" | sudo crontab -u root -
 fi
 echo
 sudo cat /var/spool/cron/crontabs/root
