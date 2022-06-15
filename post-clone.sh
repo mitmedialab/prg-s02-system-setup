@@ -57,8 +57,7 @@ echo
 # install remotepc and teamviewer
 echo
 echo -e "${G}Install and Log-in to RemotePC${N}"
-FILE="remotepc.deb"
-if [[ ! -f "$FILE" ]]; then
+if ! command -v remotepc &> /dev/null; then
    wget  https://static.remotepc.com/downloads/rpc/310320/remotepc.deb
    sudo apt install -y ./remotepc.deb
 fi
@@ -66,13 +65,9 @@ fi
 
 echo
 echo -e "${G}Install and Log-in to TeamViewer${N}"
-FILE="TeamViewer2017.asc"
-if [[ ! -f "$FILE" ]]; then
-   wget https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc 
-   sudo apt-key add TeamViewer2017.asc &&
-   sudo sh -c 'echo "deb http://linux.teamviewer.com/deb stable main" >> /etc/apt/sources.list.d/teamviewer.list' &&
-   sudo apt update &&
-   sudo apt install -y teamviewer
+if ! command -v teamviewer &> /dev/null; then
+   wget https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+   sudo dpkg -i teamviewer_amd64.deb
 fi
 
 # echo
