@@ -22,7 +22,19 @@ sudo vnclicensewiz
 #sudo apt update
 #sudo apt install python3.7
 
-sudo apt-get -y install python3-pip python3-pyqt5 python3-pyqt5.qtmultimedia python3-pandas
+# Install Python3.9
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev
+wget https://www.python.org/ftp/python/3.9.12/Python-3.9.12.tgz
+tar -xf Python-3.9.12.tgz
+cd Python-3.9.12
+make -j 4
+sudo make altinstall
+
+# Install pip3.9
+sudo apt-get install python3.9-pip
+#sudo python3.9 -m pip install -upgrade pip
+sudo apt-get install python3-yaml python3-dev
+#sudo apt-get -y install python3-pip python3-pyqt5 python3-pyqt5.qtmultimedia python3-pandas
 
 #sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
 #sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
@@ -53,6 +65,15 @@ sudo apt-get -y install python3-catkin-pkg-modules python3-rospkg-modules
 sudo rosdep init
 rosdep update
 
+pip3.9 install rospkg catkin_pkg rosdep rosinstall_generator rosinstall wstool vcstools catkin_tools
+pip3.9 install psutil
+pip3.9 install click
+pip3.9 install PyAutoGUI
+pip3.9 install Pillow
+pip3.9 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+pip3.9 install pyqt5
+pip3.9 install pandas
+pip3.9 install transitions
 
 mkdir -p ~/catkin_ws/src
 
@@ -61,6 +82,7 @@ git clone -b controller https://github.com/mitmedialab/parent-child-reading-stor
 git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
 git clone http://github.com/mitmedialab/asr_google_cloud ~/catkin_ws/src/asr_google_cloud
 
+mkdir -p ~/catkin_ws/src/output_data/affect_log
 mkdir -p ~/catkin_ws/src/output_data/annotation_log
 mkdir -p ~/catkin_ws/src/output_data/session_info
 mkdir -p ~/catkin_ws/src/output_data/tablet_log
