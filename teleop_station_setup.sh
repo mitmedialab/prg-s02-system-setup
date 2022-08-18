@@ -27,7 +27,8 @@ sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-
 wget https://www.python.org/ftp/python/3.9.12/Python-3.9.12.tgz
 tar -xf Python-3.9.12.tgz
 cd Python-3.9.12
-make -j 4
+./configure --enable-optimizations
+make -j 12
 sudo make altinstall
 
 # Install pip3.9
@@ -43,7 +44,7 @@ sudo apt-get install python3-yaml python3-dev
 
 
 # setup ROS
-#python3.7 -m pip install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag
+#python3.9 -m pip install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag
 
 #python3.7 -m pip install pip
 #python3.7 -m pip install transitions PyQt5
@@ -74,6 +75,8 @@ pip3.9 install --upgrade google-api-python-client google-auth-httplib2 google-au
 pip3.9 install pyqt5
 pip3.9 install pandas
 pip3.9 install transitions
+pip3.9 install PyYAML
+pip3.9 install -U rospkg
 
 mkdir -p ~/catkin_ws/src
 
@@ -89,6 +92,10 @@ mkdir -p ~/catkin_ws/src/output_data/tablet_log
 mkdir -p ~/catkin_ws/src/output_data/interaction_log
 mkdir -p ~/catkin_ws/src/output_data/jibo_speech_change
 mkdir -p ~/catkin_ws/src/output_data/videos
+
+## compile ros messages (e.g., jibo msgs, triadic msgs, audio msgs)
+cd ~/catkin_ws/
+catkin_make
 
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
 source ~/.bashrc
