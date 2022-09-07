@@ -16,20 +16,26 @@ sudo apt install -y ./zoom_amd64.deb
 #sudo vnclicensewiz
 
 # install python3.7
-#sudo apt update
-#sudo apt install software-properties-common
-#sudo add-apt-repository ppa:deadsnakes/ppa
-#sudo apt update
-#sudo apt install python3.7
+wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tgz
+sudo tar xzf Python-3.7.4.tgz
+cd Python-3.7.4/
+sudo ./configure
+sudo make
+sudo make install
+echo "alias python3=python3.7" >> ~/.bashrc
+echo "alias pip3=pip3.7" >> ~/.bashrc
+echo "alias python3=python3.7" >> ~/.bash_aliases
+echo "alias pip3=pip3.7" >> ~/.bash_aliases
+
 
 # Install Python3.9
-sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev
-wget https://www.python.org/ftp/python/3.9.12/Python-3.9.12.tgz
-tar -xf Python-3.9.12.tgz
-cd Python-3.9.12
-./configure --enable-optimizations
-make -j 12
-sudo make altinstall
+# sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev
+# wget https://www.python.org/ftp/python/3.9.12/Python-3.9.12.tgz
+# tar -xf Python-3.9.12.tgz
+# cd Python-3.9.12
+# ./configure --enable-optimizations
+# make -j 12
+# sudo make altinstall
 
 # Install pip3.9
 sudo apt-get install python3.9-pip
@@ -66,21 +72,21 @@ sudo apt-get -y install python3-catkin-pkg-modules python3-rospkg-modules
 sudo rosdep init
 rosdep update
 
-pip3.9 install rospkg catkin_pkg rosdep rosinstall_generator rosinstall wstool vcstools catkin_tools
-pip3.9 install psutil
-pip3.9 install click
-pip3.9 install PyAutoGUI
-pip3.9 install Pillow
-pip3.9 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
-pip3.9 install pyqt5
-pip3.9 install pandas
-pip3.9 install transitions
-pip3.9 install PyYAML
-pip3.9 install -U rospkg
+pip3 install rospkg catkin_pkg rosdep rosinstall_generator rosinstall wstool vcstools catkin_tools
+pip3 install psutil
+pip3 install click
+pip3 install PyAutoGUI
+pip3 install Pillow
+pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+pip3 install pyqt5
+pip3 install pandas
+pip3 install transitions
+pip3 install PyYAML
+pip3 install -U rospkg
 
 mkdir -p ~/catkin_ws/src
 
-git clone -b tmp-merge https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
+git clone -b final-study-2022 https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
 git clone -b controller https://github.com/mitmedialab/parent-child-reading-story-corpus.git ~/catkin_ws/src/parent-child-reading-story-corpus
 git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
 
