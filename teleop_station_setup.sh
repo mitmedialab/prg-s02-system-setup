@@ -38,7 +38,7 @@ echo "alias pip3=pip3.7" >> ~/.bash_aliases
 # sudo make altinstall
 
 # Install pip3.9
-sudo apt-get install python3.9-pip
+#sudo apt-get install python3.9-pip
 #sudo python3.9 -m pip install -upgrade pip
 sudo apt-get install python3-yaml python3-dev
 #sudo apt-get -y install python3-pip python3-pyqt5 python3-pyqt5.qtmultimedia python3-pandas
