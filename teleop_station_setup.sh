@@ -84,11 +84,16 @@ pip3 install transitions
 pip3 install PyYAML
 pip3 install -U rospkg
 
+#### PACKAGES for the affect modeling ros
+pip3 install mxnet==1.9.1
+pip3 install gluoncv
+
 mkdir -p ~/catkin_ws/src
 
 git clone -b final-study-2022 https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
 git clone -b controller https://github.com/mitmedialab/parent-child-reading-story-corpus.git ~/catkin_ws/src/parent-child-reading-story-corpus
 git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
+git clone https://github.com/ybkim95/affect_modeling_ros.git
 
 
 mkdir -p ~/catkin_ws/src/output_data/affect_log
