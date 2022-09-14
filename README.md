@@ -22,7 +22,7 @@
 
 7. Boot into the BIOS menu by pressing F2.
     - Change the UEFI boot order so that `ubuntu` is above SAMSUNG...(In `Boot > Boot Priority`)
-    - Go to Advanced > Power > After power failure, select `power on` instead of ‘stay off’. 
+    - Go to Advanced > Power > After power failure, select `power on` instead of ‘stay off’. (In `Power > Secondary Power Settings > After power failure`)
     - Go to `Boot` and disable `Secure Boot` in UEFI boot option.
     - Save and exit with F10.
     - NUC will now boot into Ubuntu.
