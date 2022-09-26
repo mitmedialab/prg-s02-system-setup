@@ -8,35 +8,26 @@ sudo apt install -y ./zoom_amd64.deb
 
 
 # install python3.7
-# sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
-# FILE="Python-3.7.4.tgz"
-# if [[ ! -f "$FILE" ]]; then
-# 	wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tgz
-# fi
-# sudo tar xzf Python-3.7.4.tgz
-# cd Python-3.7.4/
-# sudo ./configure
-# sudo make
-# sudo make install
-# echo "alias python3=python3.7" >> ~/.bashrc
-# echo "alias pip3=pip3.7" >> ~/.bashrc
-# echo "alias python3=python3.7" >> ~/.bash_aliases
-# echo "alias pip3=pip3.7" >> ~/.bash_aliases
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+FILE="Python-3.7.4.tgz"
+if [[ ! -f "$FILE" ]]; then
+	wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tgz
+fi
+sudo tar xzf Python-3.7.4.tgz
+cd Python-3.7.4/
+sudo ./configure
+sudo make
+sudo make install
+echo "alias python3=python3.7" >> ~/.bashrc
+echo "alias pip3=pip3.7" >> ~/.bashrc
+echo "alias python3=python3.7" >> ~/.bash_aliases
+echo "alias pip3=pip3.7" >> ~/.bash_aliases
 
 # source ~/.bashrc
+pip3 install --upgrade pip
 
 
 
-# Install pip3.9
-#sudo apt-get install python3.9-pip
-#sudo python3.9 -m pip install -upgrade pip
-#sudo apt-get install python3-yaml python3-dev
-#sudo apt-get -y install python3-pip python3-pyqt5 python3-pyqt5.qtmultimedia python3-pandas
-
-#sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
-#sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
-
-#sudo update-alternatives --config python3
 
 
 # setup ROS
@@ -60,8 +51,8 @@ sudo rosdep init
 rosdep update
 
 #### PACKAGES for the triadic controller
-echo "\n!!!!!!!!! PYTHON PACKAGES for triadic controller\n"
-sudo pip3 install pyqt5 PyYAML
+echo -e "\n!!!!!!!!! PYTHON PACKAGES for triadic controller\n"
+pip3 install pyqt5 PyYAML
 pip3 install rospkg catkin_pkg rosdep rosinstall_generator rosinstall wstool vcstools catkin_tools
 pip3 install psutil click PyAutoGUI Pillow pandas transitions
 pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
@@ -73,14 +64,16 @@ pip3 install gluoncv
 
 
 ### SET UP REPOS
-echo "\n!!!!!!!!! SET UP REPOS\n"
+echo -e "\n!!!!!!!!! SET UP REPOS\n"
 mkdir -p ~/catkin_ws/src
+
+git config --global credential.helper store
 
 git clone -b final-study-2022 https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
 git clone -b controller https://github.com/mitmedialab/parent-child-reading-story-corpus.git ~/catkin_ws/src/parent-child-reading-story-corpus
 git clone https://github.com/mitmedialab/jibo_msgs ~/catkin_ws/src/jibo_msgs
-git clone https://github.com/ybkim95/affect_modeling_ros.git
-git clone -b final-rm https://github.com/mitmedialab/triadic-modeling.git
+git clone https://github.com/ybkim95/affect_modeling_ros.git ~/catkin_ws/src/affect_modeling_ros
+git clone -b final-rm https://github.com/mitmedialab/triadic-modeling.git ~/catkin_ws/src/triadic-modeling
 
 
 mkdir -p ~/catkin_ws/src/output_data/affect_log
@@ -106,3 +99,5 @@ curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add
 sudo add-apt-repository "deb https://download.sublimetext.com/ apt/stable/"
 sudo apt update
 sudo apt install sublime-text
+
+echo "cd ~/catkin_ws/src/triadic-interaction-controller" >> ~/.bashrc
