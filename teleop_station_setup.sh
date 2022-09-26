@@ -8,21 +8,22 @@ sudo apt install -y ./zoom_amd64.deb
 
 
 # install python3.7
-FILE="Python-3.7.4.tgz"
-if [[ ! -f "$FILE" ]]; then
-	wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tgz
-fi
-sudo tar xzf Python-3.7.4.tgz
-cd Python-3.7.4/
-sudo ./configure
-sudo make
-sudo make install
-echo "alias python3=python3.7" >> ~/.bashrc
-echo "alias pip3=pip3.7" >> ~/.bashrc
-echo "alias python3=python3.7" >> ~/.bash_aliases
-echo "alias pip3=pip3.7" >> ~/.bash_aliases
+# sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+# FILE="Python-3.7.4.tgz"
+# if [[ ! -f "$FILE" ]]; then
+# 	wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tgz
+# fi
+# sudo tar xzf Python-3.7.4.tgz
+# cd Python-3.7.4/
+# sudo ./configure
+# sudo make
+# sudo make install
+# echo "alias python3=python3.7" >> ~/.bashrc
+# echo "alias pip3=pip3.7" >> ~/.bashrc
+# echo "alias python3=python3.7" >> ~/.bash_aliases
+# echo "alias pip3=pip3.7" >> ~/.bash_aliases
 
-source ~/.bashrc
+# source ~/.bashrc
 
 
 
@@ -59,8 +60,8 @@ sudo rosdep init
 rosdep update
 
 #### PACKAGES for the triadic controller
-pip3 install pyqt5
-pip3 install PyYAML
+echo "\n!!!!!!!!! PYTHON PACKAGES for triadic controller\n"
+sudo pip3 install pyqt5 PyYAML
 pip3 install rospkg catkin_pkg rosdep rosinstall_generator rosinstall wstool vcstools catkin_tools
 pip3 install psutil click PyAutoGUI Pillow pandas transitions
 pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
@@ -72,6 +73,7 @@ pip3 install gluoncv
 
 
 ### SET UP REPOS
+echo "\n!!!!!!!!! SET UP REPOS\n"
 mkdir -p ~/catkin_ws/src
 
 git clone -b final-study-2022 https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
