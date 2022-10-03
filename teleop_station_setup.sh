@@ -67,6 +67,9 @@ sudo pip3 install gluoncv
 echo -e "\n!!!!!!!!! SET UP REPOS\n"
 mkdir -p ~/catkin_ws/src
 
+git config --global user.name prg-family-jibo-study
+git config --global user.email prg.triadic.final.study@gmail.com
+git config --global user.password "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"
 git config --global credential.helper store
 
 git clone -b final-study-2022 https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
@@ -95,6 +98,7 @@ source ~/.bashrc
 pip3 install pyyaml transitions
 
 # install sublime 
+echo -e "\n!!!!!!!!! install sublime \n"
 sudo apt install apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
 sudo add-apt-repository "deb https://download.sublimetext.com/ apt/stable/"
