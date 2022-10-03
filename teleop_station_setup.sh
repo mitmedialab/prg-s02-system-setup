@@ -31,7 +31,7 @@ pip3 install --upgrade pip
 
 
 # setup ROS
-
+echo -e "\n!!!!!!!!! SET UP ROS\n"
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 
@@ -52,15 +52,15 @@ rosdep update
 
 #### PACKAGES for the triadic controller
 echo -e "\n!!!!!!!!! PYTHON PACKAGES for triadic controller\n"
-pip3 install pyqt5 PyYAML
-pip3 install rospkg catkin_pkg rosdep rosinstall_generator rosinstall wstool vcstools catkin_tools
-pip3 install psutil click PyAutoGUI Pillow pandas transitions
-pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
-pip3 install -U rospkg
+sudo pip3 install pyqt5 PyYAML
+sudo pip3 install rospkg catkin_pkg rosdep rosinstall_generator rosinstall wstool vcstools catkin_tools
+sudo pip3 install psutil click PyAutoGUI Pillow pandas transitions
+sudo pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+sudo pip3 install -U rospkg
 
 #### PACKAGES for the affect modeling ros
-pip3 install mxnet==1.9.1
-pip3 install gluoncv
+sudo pip3 install mxnet==1.9.1
+sudo pip3 install gluoncv
 
 
 ### SET UP REPOS
@@ -86,6 +86,7 @@ mkdir -p ~/catkin_ws/src/output_data/videos
 
 ## compile ros messages (e.g., jibo msgs, triadic msgs, audio msgs)
 cd ~/catkin_ws/
+sudo chown $USER: -R /home/prg/catkin_ws
 catkin_make
 
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
