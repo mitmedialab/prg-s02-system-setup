@@ -1,0 +1,53 @@
+#!/bin/bash
+
+DEFAULT_DOCKER_IMAGE="docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle:triatic-interaction"
+DEFAULT_COMMAND="python3 start_triadic_interaction.py"
+
+if [[ $# == 4 ]]; then
+    DOCKER_IMAGE="$1"
+    shift
+else
+    DOCKER_IMAGE="$DEFAULT_DOCKER_IMAGE"
+fi
+
+if [[ $# == 2 && $2 == "bash" ]]; then
+    DOCKER_IMAGE="$1"
+    shift
+else
+    DOCKER_IMAGE="$DEFAULT_DOCKER_IMAGE"
+fi
+
+if [[ $1 == "bash" ]]; then
+    COMMAND="bash"
+    ARGUMENTS=""
+    shift
+else
+    COMMAND="$DEFAULT_COMMAND"
+    if [[ $# == 3 ]]; then
+	ARGUMENTS="$@"
+    else
+	echo "error: must specify <participant> <session> <experimenters_name>"
+	exit 1
+    fi
+fi
+
+DISPLAY=:0 xhost +
+pactl load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket 2>/dev/null
+
+docker run \
+       --privileged \
+       --env PRGUID=$UID \
+       -v /etc/timezone:/etc/timezone:ro \
+       -v /etc/localtime:/etc/localtime:ro \
+       -v /home/prg/rosbags:/home/prg/rosbags -v /home/prg/catkin_ws/src/output_data:/home/prg/catkin_ws/src/output_data \
+       -v /etc/machine-id:/etc/machine-id \
+       -v /dev:/dev \
+       -v /var/lib/dbus:/var/lib/dbus \
+       --env PULSE_SERVER=unix:/tmp/pulseaudio.socket \
+       --env PULSE_COOKIE=/tmp/pulseaudio.cookie \
+       --volume /tmp/pulseaudio.socket:/tmp/pulseaudio.socket \
+       -it \
+       --network host \
+       -v /tmp/.X11-unix:/tmp/.X11-unix \
+       --env DISPLAY=:0 \
+       $DOCKER_IMAGE $COMMAND $@
