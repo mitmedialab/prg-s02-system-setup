@@ -15,10 +15,12 @@ sudo apt-get -y install gstreamer0.10-plugins-good gstreamer0.10-tools gstreamer
 
 
 #setting up pulseaudio
+echo -e "\n install pulseaudio\n"
 sudo apt-get install -y pulseaudio-utils
 pip3 install psutil
 
 #setting up usb_cam ros package
+echo -e "\n install usb_cam ros package\n"
 sudo apt install -y ros-kinetic-usb-cam
 rosdep install ros-kinetic-usb-cam
 sudo cp family_video.launch /opt/ros/kinetic/share/usb_cam/launch 
@@ -29,6 +31,7 @@ sudo cp family_video.launch /opt/ros/kinetic/share/usb_cam/launch
 #sudo mv ~/family_video.launch /opt/ros/kinetic/share/gscam 
 
 #setting up audio ros package
+echo -e "\n install audio ros package\n"
 cd ~/catkin_ws/src
 git clone https://github.com/ros-drivers/audio_common.git
 rosdep install audio_common
@@ -43,6 +46,7 @@ source ~/catkin_ws/devel/setup.bash
 
 #setup virtual drivers module at boot
 #video virtual module 
+echo -e "\n video virtual module\n"
 sudo bash -c 'cat > /etc/modules-load.d/v4l2loopback.conf <<EOL
 v4l2loopback 
 EOL'
