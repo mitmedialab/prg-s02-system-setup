@@ -48,7 +48,7 @@ sudo apt-get -y install python-rosdep python-rosinstall python-rosinstall-genera
 sudo apt-get -y install python3-catkin-pkg-modules python3-rospkg-modules
 
 sudo rosdep init
-rosdep update
+sudo rosdep update
 
 #### PACKAGES for the triadic controller
 echo -e "\n!!!!!!!!! PYTHON PACKAGES for triadic controller\n"
