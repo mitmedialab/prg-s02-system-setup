@@ -31,7 +31,7 @@ pip3 install --upgrade pip
 
 
 # setup ROS
-
+echo -e "\n!!!!!!!!! SET UP ROS\n"
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 
@@ -48,25 +48,28 @@ sudo apt-get -y install python-rosdep python-rosinstall python-rosinstall-genera
 sudo apt-get -y install python3-catkin-pkg-modules python3-rospkg-modules
 
 sudo rosdep init
-rosdep update
+sudo rosdep update
 
 #### PACKAGES for the triadic controller
 echo -e "\n!!!!!!!!! PYTHON PACKAGES for triadic controller\n"
-pip3 install pyqt5 PyYAML
-pip3 install rospkg catkin_pkg rosdep rosinstall_generator rosinstall wstool vcstools catkin_tools
-pip3 install psutil click PyAutoGUI Pillow pandas transitions
-pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
-pip3 install -U rospkg
+sudo pip3 install pyqt5 PyYAML
+sudo pip3 install rospkg catkin_pkg rosdep rosinstall_generator rosinstall wstool vcstools catkin_tools
+sudo pip3 install psutil click PyAutoGUI Pillow pandas transitions
+sudo pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+sudo pip3 install -U rospkg
 
 #### PACKAGES for the affect modeling ros
-pip3 install mxnet==1.9.1
-pip3 install gluoncv
+sudo pip3 install mxnet==1.9.1
+sudo pip3 install gluoncv
 
 
 ### SET UP REPOS
 echo -e "\n!!!!!!!!! SET UP REPOS\n"
 mkdir -p ~/catkin_ws/src
 
+git config --global user.name prg-family-jibo-study
+git config --global user.email prg.triadic.final.study@gmail.com
+git config --global user.password "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"
 git config --global credential.helper store
 
 git clone -b final-study-2022 https://github.com/mitmedialab/triadic-interaction-controller ~/catkin_ws/src/triadic-interaction-controller
@@ -86,6 +89,7 @@ mkdir -p ~/catkin_ws/src/output_data/videos
 
 ## compile ros messages (e.g., jibo msgs, triadic msgs, audio msgs)
 cd ~/catkin_ws/
+sudo chown $USER: -R /home/prg/catkin_ws
 catkin_make
 
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
@@ -94,6 +98,7 @@ source ~/.bashrc
 pip3 install pyyaml transitions
 
 # install sublime 
+<<<<<<< HEAD
 # sudo apt install apt-transport-https ca-certificates curl software-properties-common
 # curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
 # sudo add-apt-repository "deb https://download.sublimetext.com/ apt/stable/"
@@ -108,3 +113,13 @@ echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sou
 sudo apt-get update
 sudo apt-get install sublime-text
 sudo ln -s /opt/sublime_text/sublime_text /usr/local/bin/subl
+=======
+echo -e "\n!!!!!!!!! install sublime \n"
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+sudo add-apt-repository "deb https://download.sublimetext.com/ apt/stable/"
+sudo apt update
+sudo apt install sublime-text
+
+echo "cd ~/catkin_ws/src/triadic-interaction-controller" >> ~/.bashrc
+>>>>>>> 1a4d82d2ec3230d142079ceef74aa9098cc486de
