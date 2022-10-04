@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEFAULT_DOCKER_IMAGE="docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle:triatic-interaction"
+DEFAULT_DOCKER_IMAGE="docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle:triadic-interaction"
 DEFAULT_COMMAND="python3 start_triadic_interaction.py"
 
 if [[ $# == 4 ]]; then
