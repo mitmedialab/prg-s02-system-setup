@@ -31,8 +31,13 @@ else
     fi
 fi
 
+if [[ -d /tmp/pulseaudio.socket ]]; then
+    echo "error: /tmp/pulseaudo.socket is a directory and needs to be removed!"
+    exit 1
+fi
+
 DISPLAY=:0 xhost +
-pactl load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket 2>/dev/null
+pactl load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket
 
 docker run \
        --privileged \
