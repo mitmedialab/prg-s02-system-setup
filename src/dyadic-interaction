@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEFAULT_DOCKER_IMAGE="docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle:triadic-interaction"
+DEFAULT_DOCKER_IMAGE="docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle:triatic-interaction"
 DEFAULT_COMMAND="python3 dyadic-controller.py"
 
 DOCKER_IMAGE="$DEFAULT_DOCKER_IMAGE"
@@ -9,7 +9,7 @@ COMMAND="$DEFAULT_COMMAND"
 if [[ $1 == "bash" ]]; then
     COMMAND="bash"
     shift
-fi
+]]
 
 if [[ $# > 0 ]]; then
     DOCKER_IMAGE="$1"
@@ -19,7 +19,7 @@ fi
 if [[ $1 == "bash" ]]; then
     COMMAND="bash"
     shift
-fi
+]]
 
 xhost +
 pactl load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket 2>/dev/null
