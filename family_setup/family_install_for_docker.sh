@@ -25,6 +25,9 @@ load-module module-null-sink sink_name=Family
 load-module module-loopback sink=Family
 EOL'
 
+# create a link to run triadic 
+echo "ln -s /home/prg/prg-s02-system-setup/src/triadic-interaction triadic-interaction" >> ~/.bashrc
+
 ### set up zoom
 FILE="zoom_amd64.deb"
 if [[ ! -f "$FILE" ]]; then
