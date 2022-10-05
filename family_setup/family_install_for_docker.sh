@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 # secure boot should be disabled or, follow the instructions while installing this package
 sudo apt-get install -y v4l2loopback-dkms
 
@@ -22,3 +24,10 @@ sudo bash -c 'cat >>  /etc/pulse/default.pa <<EOL
 load-module module-null-sink sink_name=Family
 load-module module-loopback sink=Family
 EOL'
+
+### set up zoom
+FILE="zoom_amd64.deb"
+if [[ ! -f "$FILE" ]]; then
+    wget https://zoom.us/client/latest/zoom_amd64.deb 
+fi
+sudo apt install -y ./zoom_amd64.deb
