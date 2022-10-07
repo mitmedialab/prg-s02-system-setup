@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEFAULT_DOCKER_IMAGE="docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle#triadic-interaction"
+DEFAULT_DOCKER_IMAGE="docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle:triadic-interaction"
 DEFAULT_COMMAND="python3 dyadic-controller.py"
 
 DOCKER_IMAGE="$DEFAULT_DOCKER_IMAGE"
@@ -37,7 +37,7 @@ pactl load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket 2>/d
 RESTART_ARG=""
 TERMINAL_ARG="-it"
 
-if [[ $COMMAND == "install" ]];
+if [[ $COMMAND == "install" ]]; then
     COMMAND="$DEFAULT_COMMAND"
     RESTART_ARG="--restart unless-stopped"
     TERMINAL_ARG="-d"
