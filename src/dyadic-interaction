@@ -41,6 +41,9 @@ if [[ $COMMAND == "install" ]]; then
     COMMAND="$DEFAULT_COMMAND"
     RESTART_ARG="--restart unless-stopped"
     TERMINAL_ARG="-d"
+    echo "installing $DOCKER_IMAGE with --restart unless-stopped"
+else
+    echo "running $COMMAND $@ with $DOCKER_IMAGE"
 fi
 
 docker run \
