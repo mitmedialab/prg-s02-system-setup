@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEFAULT_DOCKER_IMAGE="docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle:yubin" #"triadic-interaction"
+DEFAULT_DOCKER_IMAGE="docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle#triadic-interaction"
 DEFAULT_COMMAND="python3 dyadic-controller.py"
 
 DOCKER_IMAGE="$DEFAULT_DOCKER_IMAGE"
@@ -8,6 +8,11 @@ COMMAND="$DEFAULT_COMMAND"
 
 if [[ $1 == "bash" ]]; then
     COMMAND="bash"
+    shift
+fi
+
+if [[ $1 == "install" ]]; then
+    COMMAND="install"
     shift
 fi
 
@@ -21,11 +26,26 @@ if [[ $1 == "bash" ]]; then
     shift
 fi
 
+if [[ $1 == "install" ]]; then
+    COMMAND="install"
+    shift
+fi
+
 xhost +
 pactl load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket 2>/dev/null
 
+RESTART_ARG=""
+TERMINAL_ARG="-it"
+
+if [[ $COMMAND == "install" ]];
+    COMMAND="$DEFAULT_COMMAND"
+    RESTART_ARG="--restart unless-stopped"
+    TERMINAL_ARG="-d"
+fi
 
 docker run \
+       $TERMINAL_ARG \
+       $RESTART_ARG \
        --privileged \
        --entrypoint /ros_auto_dyadic_entrypoint.sh \
        --env PRGUID=$UID \
@@ -38,10 +58,7 @@ docker run \
        --restart unless-stopped \
        --env PULSE_SERVER=unix:/tmp/pulseaudio.socket \
        --env PULSE_COOKIE=/tmp/pulseaudio.cookie \
-       --volume /tmp/pulseaudio.socket:/tmp/pulseaudio.socket \
-       -it \
-       --name yubin \
+       --volume /tmp:/tmp \
        --network host \
-       -v /tmp/.X11-unix:/tmp/.X11-unix \
        --env DISPLAY=:0 \
        $DOCKER_IMAGE $COMMAND $@
