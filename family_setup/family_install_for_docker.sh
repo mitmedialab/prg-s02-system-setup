@@ -28,9 +28,3 @@ EOL'
 # create a link to run triadic 
 echo "ln -s /home/prg/prg-s02-system-setup/src/triadic-interaction triadic-interaction" >> ~/.bashrc
 
-### set up zoom
-FILE="zoom_amd64.deb"
-if [[ ! -f "$FILE" ]]; then
-    wget https://zoom.us/client/latest/zoom_amd64.deb 
-fi
-sudo apt install -y ./zoom_amd64.deb
