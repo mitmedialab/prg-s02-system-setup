@@ -48,7 +48,7 @@ fi
 
 docker run \
        $TERMINAL_ARG \
-       $RESTART_ARG \
+       --restart always \
        --privileged \
        --entrypoint /ros_auto_dyadic_entrypoint.sh \
        --env PRGUID=$UID \
@@ -58,7 +58,6 @@ docker run \
        -v /etc/machine-id:/etc/machine-id \
        -v /dev:/dev \
        -v /var/lib/dbus:/var/lib/dbus \
-       --restart unless-stopped \
        --env PULSE_SERVER=unix:/tmp/pulseaudio.socket \
        --env PULSE_COOKIE=/tmp/pulseaudio.cookie \
        --volume /tmp:/tmp \
