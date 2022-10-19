@@ -41,6 +41,7 @@ pactl load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket
 
 docker run \
        --privileged \
+       --entrypoint /ros_triadic_interaction_entrypoint.sh \
        --env PRGUID=$UID \
        -v /etc/timezone:/etc/timezone:ro \
        -v /etc/localtime:/etc/localtime:ro \
