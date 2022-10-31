@@ -323,7 +323,7 @@ if [[ ! -f "$FILE" ]]; then
   wget https://download.remotepc.com/downloads/rpc/310320/remotepc-old.deb # ubuntu 16
 fi
 # sudo apt install -y ./remotepc.deb
-sudo apt install -y ./remotepc.deb # ubuntu16
+sudo apt install -y ./remotepc-old.deb # ubuntu16
 
 echo
 echo -e "${G}Install and Log-in to TeamViewer${N}"
