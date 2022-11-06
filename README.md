@@ -102,6 +102,17 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
         - `./teleop_station_setup.sh`
         - When prompted, setup realVNC (ID: robots.deployment@gmail.com, Pass: (on LastPass))
         - `cd family_setup. && ./family_extra_install.sh`
+    - Pulseaudio and loopback for nuc-10s
+        - Make sure `load-module module-native-protocol-unix socket=/tmp/pulseaudio.socket` is added to `/etc/pulse/default.pa` in local ubuntu.
+        - Also, add the followings to `/etc/pulse/client.config` 
+          ```
+          default-server = unix:/tmp/pulseaudio.socket 
+          autospawn = no 
+          daemon-binary = /bin/true 
+          enable-shm = false
+          ``` 
+        - To activate/deactivate loopback, open a browser and enter `http://localhost/loopback/on` or `http://localhost/loopback/off`. Please refer to dyadic-controller.py in auto-dyadic-controller for doing it with python requests.
+         
 
 7. Setup RemotePC
     - run `remotepc &`
