@@ -111,6 +111,7 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
           daemon-binary = /bin/true 
           enable-shm = false
           ``` 
+        - add `options v4l2loopback video_nr=7,8 card_label="family project","family project 2"` to `/etc/modprobe.d/v4l2loopback.conf`
         - To activate/deactivate loopback, open a browser and enter `http://localhost/loopback/on` or `http://localhost/loopback/off`. Please refer to dyadic-controller.py in auto-dyadic-controller for doing it with python requests.
          
 
