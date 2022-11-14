@@ -13,4 +13,4 @@ cd  /usr/local/jibo-station-wifi-service
 
 systemctl stop jibo-station-wifi-service.service
 
-./install.sh
+bash install.sh
