@@ -148,6 +148,7 @@ echo "OK"
 echo
 echo -e "${G}Set up ALSA configuration${N}"
 touch ~/Templates/"New Document"
+sudo -s <<EOF
 echo "pcm.usbmic1 {
     type dsnoop
     ipc_key 123456
@@ -175,9 +176,10 @@ pcm.usbmic2 {
         description \"LOOPBACK_DEV_2\"
     }
 }" > /etc/asound.conf && echo "OK"
+EOF
 
 echo -e "${G}Create s06 Video folder${N}"
-runuser -l prg -c 'mkdir -p ~/s06-empathy-interaction/empathy_videos/uploaded' &&
+mkdir -p ~/s06-empathy-interaction/empathy_videos/uploaded &&
 echo "OK"
 
 echo
