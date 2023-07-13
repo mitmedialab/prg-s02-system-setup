@@ -147,6 +147,7 @@ echo "OK"
 
 echo
 echo -e "${G}Set up ALSA configuration${N}"
+touch ~/Templates/"New Document"
 echo "pcm.usbmic1 {
     type dsnoop
     ipc_key 123456
