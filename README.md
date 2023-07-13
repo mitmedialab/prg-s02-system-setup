@@ -138,6 +138,8 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
     - Test ssh into the new NUC from another machine on the same Network.
     - Test auto power on: unplug the power and replug to check if NUC auto powers on.
 
+11. For the empathy interaction clones: make sure that the docker-compose.env has been copied into the /home/prg directory
+
 
 # Android Tablet
 

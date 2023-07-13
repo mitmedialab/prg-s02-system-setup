@@ -1,7 +1,9 @@
+#!/bin/bash
+
 G='\033[0;32m'
 N='\033[0m'
 
-source ../src/s02-machine-commands.sh
+source s06-empathy-interactions/s06-machine-commands.sh
 
 ROOT_DIR=$PWD
 
@@ -54,12 +56,6 @@ sudo cat /var/spool/cron/crontabs/root
 echo
 echo "OK"
 
-# echo
-# echo -e "${G}Setup PRG-MIT WiFi${N}"
-# sudo cp -R -u -p src/PRG-MIT /etc/NetworkManager/system-connections/
-# sudo chmod 600 /etc/NetworkManager/system-connections/PRG-MIT &&
-# echo "OK"
-
 echo
 echo -e "${G}Add ssh keys${N}"
    mkdir -p ~/.ssh
@@ -93,8 +89,8 @@ if [[ ! -f "$FILE" ]]; then
    wget http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/629479/chrome-linux.zip -P ~/ 
 fi
 unzip -qq ~/chrome-linux.zip -d ~/ &&
-cp -R -u -p src/JiboChromium_logo.png ~/chrome-linux &&
-cp -R -u -p src/JiboChromium.desktop ~/Desktop &&
+cp -R -u -p s06-empathy-interactions/JiboChromium_logo.png ~/chrome-linux &&
+cp -R -u -p s06-empathy-interactions/JiboChromium.desktop ~/Desktop &&
 echo "OK"
 
 echo
@@ -147,6 +143,40 @@ sleep 1s
 mkdir -p /home/prg/.docker &&
 sudo chown prg:prg /home/prg/.docker -R &&
 sudo chmod g+rwx "/home/prg/.docker" -R &&
+echo "OK"
+
+echo
+echo -e "${G}Set up ALSA configuration${N}"
+echo "pcm.usbmic1 {
+    type dsnoop
+    ipc_key 123456
+    ipc_perm 0666
+    slave {
+        pcm \"hw:CARD=AC44,DEV=0\"
+        channels 1
+        rate 44100
+    }
+    hint {
+        description \"LOOPBACK_DEV\"
+    }
+}
+
+pcm.usbmic2 {
+    type dsnoop
+    ipc_key 123456
+    ipc_perm 0666
+    slave {
+        pcm \"hw:CARD=AC44,DEV=0\"
+        channels 1
+        rate 32000
+    }
+    hint {
+        description \"LOOPBACK_DEV_2\"
+    }
+}" > /etc/asound.conf && echo "OK"
+
+echo -e "${G}Create s06 Video folder${N}"
+runuser -l prg -c 'mkdir -p ~/s06-empathy-interaction/empathy_videos/uploaded' &&
 echo "OK"
 
 echo
