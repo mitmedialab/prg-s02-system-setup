@@ -156,7 +156,7 @@ echo "pcm.usbmic1 {
     slave {
         pcm \"hw:CARD=AC44,DEV=0\"
         channels 1
-        rate 44100
+        rate 32000
     }
     hint {
         description \"LOOPBACK_DEV\"
