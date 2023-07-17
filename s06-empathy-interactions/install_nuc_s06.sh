@@ -37,6 +37,20 @@ fi
 
 
 echo
+echo -e "${G}Setup rc.local${N}"
+FILE="/etc/rc.local"
+if [[ ! -f "$FILE" ]]; then 
+sudo cp rc-local.service /etc/systemd/system/rc-local.service
+    echo "#!/bin/sh -e" | sudo tee /etc/rc.local
+    echo "" | sudo tee -a /etc/rc.local
+    echo "exit 0" | sudo tee -a /etc/rc.local
+    sudo chmod +x /etc/rc.local
+    sudo systemctl enable rc-local
+    echo "OK"
+fi
+
+
+echo
 echo -e "${G}Setup Reboot Timer${N}"
 # reboot_cmd="00 7 \* \* \*      /sbin/reboot"
 # if ! sudo grep -q "\*/1 \* \* \* \*    /bin/bash /usr/local/jibo-station-wifi-service/check_and_run.sh" /var/spool/cron/crontabs/root; then 
@@ -59,6 +73,7 @@ echo "OK"
 echo
 echo -e "${G}Add ssh keys${N}"
    mkdir -p ~/.ssh
+   chmod go-rwx ~/.ssh
    echo "adding haewon's ssh key"
    sudo grep -qxF "$haewons_ssh_key" ~/.ssh/authorized_keys || echo "$haewons_ssh_key" >> ~/.ssh/authorized_keys
    echo "adding brayden's ssh key"
@@ -192,21 +207,31 @@ cd $ROOT_DIR
 echo "OK"
 
 
+if [ -d "/usr/local/jibo-station-wifi-service" ]; then
+    echo ""
+    echo "Note: It looks like jibo-station-wifi-service has already been installed"
+    echo "      So you might want to say 'No' to the next question"
+    echo ""
+fi
+
+# WiFi setup
 INSTALL_WIFI_DONGLE=true
 while true; do
     read -p "Are you installing a WiFi dongle? [Y/n]: " yn
     case $yn in
         [Nn]* ) INSTALL_WIFI_DONGLE=false; break;;
-        [Yy]* ) read -n 1 -r -s -p  "Okay, setting up WiFi Dongle. Connect WiFi USB Dongle and hit enter..."; break;;
+        [Yy]*|"" ) read -n 1 -r -s -p  "Okay, setting up WiFi Dongle. Connect WiFi USB Dongle and hit enter..."; break;;
         * ) echo "Please answer yes or no.";;
     esac
 done
 
 read -r -d '' wifi_interfaces_config <<EOF
+auto lo wlan0
+allow-hotplug wlan1
 iface wlan0 inet static
 address 10.99.0.1
 netmask 255.255.255.0
-gateway 10.99.0.1
+iface wlan1 inet dhcp
 EOF
 
 read -r -d '' wifi_sysctl_config <<EOF
@@ -233,6 +258,8 @@ EOF
 
 read -r -d '' wifi_dnsmasq_config <<EOF
 interface=wlan0
+bind-interfaces
+except-interface=lo
 dhcp-range=10.99.0.2,10.99.0.20,255.255.255.0,24h
 no-hosts
 addn-hosts=/etc/hosts.dnsmasq
@@ -256,72 +283,103 @@ network={
 }
 
 network={
-	ssid="SquidDisco 5GHz"
-	psk=cf0ba3aceef787616471c206c3e5f6fe400fad78a65c5bade078e5ed20e264f4
+	ssid="SquidDisco"
+        psk=a54e9bac812a27aa7fee335d6971cf07e51d88132201e5cd11ea50d4b8c0f5fe
 }
 EOF
 
 if $INSTALL_WIFI_DONGLE; then
-   if [ ! -d "/usr/local/jibo-station-wifi-service" ]; then
+      echo "installing additional networking packages"
+      sudo apt install -y net-tools iw ifupdown ifplugd resolvconf hostapd haveged dnsmasq #libhavege2 may not exist?
 
       # disable the unique network interface names, go back to wlan0 & wlan1
       echo "disabling complex names"
       sudo ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
-      echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces
-      sudo sed -i~ 's/auto lo/auto lo wlan0/' /etc/network/interfaces
+      if ! grep -q wlan1 /etc/network/interfaces; then
+	  echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces 1>/dev/null
+      fi
 
-      # cat /etc/network/interfaces
-      # echo
-      # echo "/etc/network/interfaces should look like this:"
-      # echo "auto lo wlan0
-      #  iface lo inet loopback
-      #  iface wlan0 inet static
-      #  address 10.99.0.1
-      #  netmask 255.255.255.0
-      #  gateway 10.99.0.1"
+      if ! egrep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
+	  echo "$wifi_sysctl_config" | sudo tee -a /etc/sysctl.conf >/dev/null
+      fi
 
-      echo "$wifi_sysctl_config" | sudo tee -a /etc/sysctl.conf
+      echo "$wifi_hostapd_config" | sudo tee /etc/hostapd/hostapd.conf >/dev/null
+      echo "DAEMON_CONF=/etc/hostapd/hostapd.conf" | sudo tee -a /etc/default/hostapd >/dev/null
+      sudo systemctl unmask hostapd.service
+      sudo systemctl enable hostapd.service
 
-      echo "$wifi_hostapd_config" | sudo tee /etc/hostapd/hostapd.conf
+      echo ""
+      echo "the error about dnsmasq conflicting on port 53 is ignorable"
+      echo "it'll be fixed when the system reboots with the new dnsmasq.conf file in place"
+      echo ""
 
-      echo "DAEMON_CONF=/etc/hostapd/hostapd.conf" | sudo tee -a /etc/default/hostapd
+      if [ ! -e /etc/dnsmasq.conf.dist ]; then
+      	  sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
+      	  echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
+      	  sudo touch /etc/hosts.dnsmasq
+      fi
 
-      sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
-      echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
-      sudo touch /etc/hosts.dnsmasq
+      if [ ! -e /etc/systemd/system/dnsmasq.service ]; then
+	  sudo cp -p /lib/systemd/system/dnsmasq.service /etc/systemd/system/dnsmasq.service
+	  sudo sed -i~ '/^Requires=network.target/a After=network-online.target\nWants=network-online.target' /etc/systemd/system/dnsmasq.service
+      fi
 
-      sudo sed -i~ '/^Requires=network.target/a After=network-online.target\nWants=network-online.target' /lib/systemd/system/dnsmasq.service
+      if ! egrep -q wlan1 /etc/rc.local; then
+	  if [[ $(tail -1 /etc/rc.local) = "exit 0" ]]; then
+	      NEW_RC_LOCAL="$(head -n -1 /etc/rc.local; cat wifi_rclocal_config.txt; echo ''; echo 'exit 0')"
+	      echo "$NEW_RC_LOCAL" | sudo tee /etc/rc.local >/dev/null
+	  else
+	      echo "Error: /etc/rc.local doesn't end with 'exit 0' line"
+	  fi
+      fi
 
-      sudo cp /lib/systemd/system/dnsmasq.service  /etc/systemd/system/
-
-      sudo sed -i~ '/^exit 0.*/e cat wifi_rclocal_config.txt' /etc/rc.local
-
-      echo "installing dhcpcd5"
-      sudo apt update
-      sudo apt install dhcpcd5
-      sudo systemctl enable dhcpcd
+      if ! grep -q "nameserver 8.8.8.8" /etc/resolvconf/resolv.conf.d/head; then
+	  echo "adding google nameservers to head of default resolv.conf file"
+	  echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
+	  echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
+      fi
+      if ! egrep -q wlan1 /etc/default/ifplugd; then
+	  sudo sed -i~ 's/INTERFACES=""/INTERFACES="wlan1"/' /etc/default/ifplugd
+      fi
 
       echo "configuring wpa_supplicant"
-      echo "$wpa_supplicant" | sudo tee /etc/wpa_supplicant.conf
+      echo "$wpa_supplicant" | sudo tee /etc/wpa_supplicant.conf >/dev/null
       
-      sudo mv wpa_supplicant.service /etc/systemd/system/
+      sudo cp -p wpa_supplicant.service.nuc10 /etc/systemd/system/wpa_supplicant.service
+      sudo chown root:root /etc/systemd/system/wpa_supplicant.service
 
       # probably not needed
       sudo systemctl enable wpa_supplicant.service
 
-      # diable Network Manager
+      if [ ! -e /usr/local/jibo-station-wifi-service ]; then
+	  sudo mkdir /usr/local/jibo-station-wifi-service
+	  sudo chown prg /usr/local/jibo-station-wifi-service
+	  git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
+	  (cd /usr/local/jibo-station-wifi-service && JSWS_NO_REBOOT_PROMPT=1 ./install.sh)
+      fi
+
+      # disable Network Manager
       #systemctl stop NetworkManager  # nah! probably don't wanna do this
       for f in NetworkManager NetworkManager-wait-online.service NetworkManager-dispatcher.service network-manager.service; do
          echo "disabling $f"
          sudo systemctl disable $f
       done
-
-      sudo git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
-      sudo chown -R prg /usr/local/jibo-station-wifi-service
-      cd /usr/local/jibo-station-wifi-service && ./install.sh
-   fi
 fi
+
+
+read -p "S02 NUC setup finished. Reboot? [y/n] " yn
+case $yn in
+    ""|[yY]|yes|Yes|YES )
+	sudo reboot
+	;;
+    * )
+	echo "not rebooting"
+	;;
+esac
+
+exit
+
 
 echo
 echo -e "${G}Install and Log-in to RemotePC${N}"
@@ -330,6 +388,16 @@ if [[ ! -f "$FILE" ]]; then
   wget  https://static.remotepc.com/downloads/rpc/310320/remotepc.deb #ubuntu 18+
 fi
 sudo apt install -y ./remotepc.deb
+
+
+echo
+echo -e "${G}Install and Log-in to TeamViewer${N}"
+FILE="teamviewer_amd64.deb"
+if [[ ! -f "$FILE" ]]; then
+   # wget https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc 
+   wget https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+fi
+
 
 echo
 echo "Done. Now run 'remotepc &' on another terminal. After logging in the first time, you need to check email and verify new device."
