@@ -9,7 +9,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDHTDAMP5W03vgYNfdTuaO7GPiNKJ/+Mq+/QpxO5Sv9
 EOF
 
 read -r -d '' jocelyns_ssh_key <<EOF
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNhyG7+qUJ91E+6c4YZ8//jFcLxQWrEpRLSHQPS9jJLJc2tLgymkef0KCVxh1epXbJxFf57PLzAlXnx0JV/O5HWND1IHwXP165NsxnKtoUWCyC80eI/Vy31Wfi6JBKtrVqUnpFEFZhQ8MiXWNxU5ywEgXKypnDLH9jt2l7NUB0BvjQxZbREudRv2Eaou78MBIzkmzj2BruvLGggsQqXEpeL6tKI9IWBAeK6k+RmyUwKqmynABbdxGh80kcts6/mAGAYI/gVmn2ZUkAchpOyXetx47ou8mYoQynzpVgaEt5J5Cb9hFpPZ8I3EwlakuX7RLZDzibONEE1gQfsWqI7KZt Brayden@zhangxiajiedeMacBook-Pro.local
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBJFxwXkGAQQXkQoYCL39dSe1UzBfh/wYnMwpR93mbrvTGBkq4k9M6MvkbKdy0rPIY6bgtm2mthh+AFCBOdaPdGnZ/hIYs/492FGZDjXkSMtOz76QfgNeeplvIcQyDSeLxq5us4Uis9srbKdbD3vOjEbvlhvsW/2eArgd1cbCUilZgJppuD/PYXThsTjjtGxHO1+RxKJdg4wnIt/Ii09qjAsfWm4ic/DYdJ1D85S0Z35uX20qkQAQG2OBTrCUyeZBtPVjfJld/rYdOHMXT0eezTkDScUe/v2BRBh98LPGmhMZXQzTACKFubcNZRHcwGPyTmCdlAxSv6G7fB5EvMtQ9Ml97AdsD7Q6D/eoedUUUm27wfkw10UWZgXg2/qOrvVEZiGj/QODuUhCShsv6SerctgSCOY5kGeAkbk5394YaioeARqviSL8qiNqQ+xzMM4Vcy65bn3I3lTfLijvl6C0Up/bL+5Q6kw0Ootr+DcqrdsinYFXZI7ncUYqsFujVRZE= jocelynshen@dhcp-10-31-116-109.dyn.MIT.EDU
 EOF
 
 read -r -d '' audreys_ssh_key <<EOF
@@ -21,10 +21,10 @@ install_prg_ssh_keys() {
     echo "adding haewon's ssh key"
     echo "$haewons_ssh_key" > /tmp/additional_key.pub
     ssh_cmd ssh-copy-id -f -i /tmp/additional_key $username@$nuc_ip_addr
-    echo "adding brayden's ssh key"
+    echo "adding jocelyn's ssh key"
     echo "$jocelyns_ssh_key" > /tmp/additional_key.pub
     ssh_cmd ssh-copy-id -f -i /tmp/additional_key $username@$nuc_ip_addr
-    echo "adding sam's ssh key"
+    echo "adding audrey's ssh key"
     echo "$audreys_ssh_key" > /tmp/additional_key.pub
     ssh_cmd ssh-copy-id -f -i /tmp/additional_key $username@$nuc_ip_addr
     echo "adding jon's ssh key"

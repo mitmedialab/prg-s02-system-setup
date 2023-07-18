@@ -5,7 +5,6 @@ N='\033[0m'
 
 source s06-empathy-interactions/s06-machine-commands.sh
 
-ROOT_DIR=$PWD
 if [[ ! -e ./rc-local.service ]]; then
     echo "run this in the top directory of the checked-out prg-s02-system-setup repo"
     exit 1
@@ -17,28 +16,8 @@ line="$USER ALL=(ALL) NOPASSWD: ALL"
 sudo grep -qxF "$line" /etc/sudoers || sudo sed -i '27i '"$line"'' /etc/sudoers  &&
 echo "OK"
 
-LOC_SCHOOL="1"
-LOC_HOME="2"
-LOC_DHA="3"
-echo "Select from the following option:"
-echo "[1] School Deployment"
-echo "[2] Home Deployment"
-echo "[3] DHA Deployment"
-read LOCATION
 
-if [ "$LOCATION" = "$LOC_SCHOOL" ]; then
-   SWARM_TOKEN="SWMTKN-1-4qtr77cbney2t4f81rj7qlz61fq78l4wyv3infn4d5lz1ct1g1-4ryfnlja84ovm2da412rk0xe2 18.27.79.165:2377"
-   # SHEET_URL="https://docs.google.com/spreadsheets/d/1LyPBXvrFj7XT9vVZTdyXslW371ttndbsb-SnG8kh-2M/edit?usp=sharing"
-elif [ "$LOCATION" = "$LOC_HOME" ]; then
-   SWARM_TOKEN="SWMTKN-1-3r1kuhl9wrgka8pce4slulizgo0elx8m81plxsxct31md3tbgd-by06dq1top1x9wfm3mxwn6z5b 18.27.78.195:2377" 
-   # SHEET_URL="https://docs.google.com/spreadsheets/d/135a5wF63Tt_AUOSR7NvoM1jeysmoccADIUxwsIcF2c0/edit?usp=sharing"
-elif [ "$LOCATION" = "$LOC_DHA" ]; then
-   SWARM_TOKEN="SWMTKN-1-3mh14xm7y74su3jcoym339t7n562bzossrfn0fksdv5wm2qnxm-ex4dblke9q3os5o2i1cixlv88 18.27.79.58:2377" 
-   # SHEET_URL="https://docs.google.com/spreadsheets/d/135a5wF63Tt_AUOSR7NvoM1jeysmoccADIUxwsIcF2c0/edit?usp=sharing"   
-else
-   exit
-fi
-
+SWARM_TOKEN="SWMTKN-1-4qtr77cbney2t4f81rj7qlz61fq78l4wyv3infn4d5lz1ct1g1-4ryfnlja84ovm2da412rk0xe2 18.27.79.165:2377"  # buildroot.media.mit.edu
 
 echo
 echo -e "${G}Setup rc.local${N}"
@@ -55,20 +34,24 @@ fi
 
 
 echo
-echo -e "${G}Setup Reboot Timer${N}"
+echo -e "${G}Setup Cron Jobs and Reboot Timers${N}"
 # reboot_cmd="00 7 \* \* \*      /sbin/reboot"
 # if ! sudo grep -q "\*/1 \* \* \* \*    /bin/bash /usr/local/jibo-station-wifi-service/check_and_run.sh" /var/spool/cron/crontabs/root; then 
 #    echo -e "$(sudo crontab -u root -l)\n*/1 * * * *    /bin/bash /usr/local/jibo-station-wifi-service/check_and_run.sh" | sudo crontab -u root -
 # fi
+
 if ! sudo grep -q "\*/1 \* \* \* \* \+/bin/systemctl start docker" /var/spool/cron/crontabs/root; then 
    echo -e "$(sudo crontab -u root -l)\n*/1 * * * *    /bin/systemctl start docker" | sudo crontab -u root -
 fi
-if ! sudo grep -q "00 7 \* \* \* \+/bin/systemctl restart docker" /var/spool/cron/crontabs/root; then 
-   echo -e "$(sudo crontab -u root -l)\n00 7 * * *    /bin/systemctl restart docker" | sudo crontab -u root -
-fi
-if ! sudo grep -q "#00 7 \* \* \* \+/sbin/reboot" /var/spool/cron/crontabs/root; then 
-   echo -e "$(sudo crontab -u root -l)\n#00 7 * * *    /sbin/reboot" | sudo crontab -u root -
-fi
+
+#if ! sudo grep -q "00 7 \* \* \* \+/bin/systemctl restart docker" /var/spool/cron/crontabs/root; then 
+#   echo -e "$(sudo crontab -u root -l)\n00 7 * * *    /bin/systemctl restart docker" | sudo crontab -u root -
+#fi
+
+#if ! sudo grep -q "#00 7 \* \* \* \+/sbin/reboot" /var/spool/cron/crontabs/root; then 
+#   echo -e "$(sudo crontab -u root -l)\n#00 7 * * *    /sbin/reboot" | sudo crontab -u root -
+#fi
+
 echo
 sudo cat /var/spool/cron/crontabs/root
 echo
@@ -80,10 +63,10 @@ echo -e "${G}Add ssh keys${N}"
    chmod go-rwx ~/.ssh
    echo "adding haewon's ssh key"
    sudo grep -qxF "$haewons_ssh_key" ~/.ssh/authorized_keys || echo "$haewons_ssh_key" >> ~/.ssh/authorized_keys
-   echo "adding brayden's ssh key"
-   sudo grep -qxF "$braydens_ssh_key" ~/.ssh/authorized_keys || echo "$braydens_ssh_key" >> ~/.ssh/authorized_keys
-   echo "adding sam's ssh key"
-   sudo grep -qxF "$sams_ssh_key" ~/.ssh/authorized_keys || echo "$sams_ssh_key" >> ~/.ssh/authorized_keys
+   echo "adding jocelyn's ssh key"
+   sudo grep -qxF "$jocelyns_ssh_key" ~/.ssh/authorized_keys || echo "$jocelyns_ssh_key" >> ~/.ssh/authorized_keys
+   echo "adding audrey's ssh key"
+   sudo grep -qxF "$audreys_ssh_key" ~/.ssh/authorized_keys || echo "$audreys_ssh_key" >> ~/.ssh/authorized_keys
    echo "adding jon's ssh key"
    sudo grep -qxF "$jons_ssh_key" ~/.ssh/authorized_keys || echo "$jons_ssh_key" >> ~/.ssh/authorized_keys
 
@@ -93,7 +76,7 @@ sudo apt-get update &&
 
 echo
 echo -e "${G}install packages${N}"
-sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip wget lsb-release libminizip1 libxcb-xinerama0 emacs-nox htop cmtest make &&
+sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip wget lsb-release libminizip1 libxcb-xinerama0 emacs-nox htop make &&
 
 echo
 echo -e "${G}Install openssh-server${N}"
@@ -106,10 +89,10 @@ echo -e "${G}Install low version Chromium for Jibo Console${N}"
 FILE="/home/prg/chrome-linux.zip"
 if [[ ! -f "$FILE" ]]; then
    wget http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/629479/chrome-linux.zip -P ~/ 
+   unzip -qq ~/chrome-linux.zip -d ~/ &&
+   cp -R -u -p s06-empathy-interactions/JiboChromium_logo.png ~/chrome-linux &&
+   cp -R -u -p s06-empathy-interactions/JiboChromium.desktop ~/Desktop &&
 fi
-unzip -qq ~/chrome-linux.zip -d ~/ &&
-cp -R -u -p s06-empathy-interactions/JiboChromium_logo.png ~/chrome-linux &&
-cp -R -u -p s06-empathy-interactions/JiboChromium.desktop ~/Desktop &&
 echo "OK"
 
 echo
@@ -163,14 +146,15 @@ sudo chown prg:prg /home/prg/.docker -R &&
 sudo chmod g+rwx "/home/prg/.docker" -R &&
 echo "OK"
 
+echo -e "Fix create 'New Document' right click menu"
+touch ~/Templates/"New Document"
 
 echo
 echo -e "${G}Set up ALSA configuration${N}"
-touch ~/Templates/"New Document"
 sudo -s <<EOF
 echo "pcm.usbmic1 {
     type dsnoop
-    ipc_key 123456
+    ipc_key 466752
     ipc_perm 0666
     slave {
         pcm \"hw:CARD=AC44,DEV=0\"
@@ -184,7 +168,7 @@ echo "pcm.usbmic1 {
 
 pcm.usbmic2 {
     type dsnoop
-    ipc_key 123456
+    ipc_key 466752
     ipc_perm 0666
     slave {
         pcm \"hw:CARD=AC44,DEV=0\"
@@ -198,15 +182,14 @@ pcm.usbmic2 {
 EOF
 
 echo -e "${G}Create s06 Video folder${N}"
-mkdir -p ~/s06-empathy-interaction/empathy_videos/uploaded &&
-echo "OK"
-
+mkdir -p ~/s06-empathy-interaction/empathy_videos/uploaded && echo "OK"
 
 echo
 echo -e "${G}Setup VPN${N}"
-tar zxvf vpn-s02.tar.gz -C ~/
-cd ~/vpn && sudo ./install.sh 
-cd $ROOT_DIR
+if [[ ! -d ~/vpn ]]; then
+   tar zxvf vpn-s02.tar.gz -C ~/
+   (cd ~/vpn && sudo ./install.sh)
+fi
 echo "OK"
 
 
@@ -276,18 +259,8 @@ update_config=1
 country=US
 
 network={
-	ssid="hindol"
-	psk=375fd953ab5cbc33a4ce1b7d455213de40ee5aeac577215237f1107cb3a148ff
-}
-
-network={
-	ssid="PRG-MIT"
-	psk=eaaf33ae234217c783d8e1c21eb6e1b1b4534171a0aa8befa386b2d55a84bac0
-}
-
-network={
-	ssid="SquidDisco"
-        psk=a54e9bac812a27aa7fee335d6971cf07e51d88132201e5cd11ea50d4b8c0f5fe
+        ssid="PRG-MIT"
+        psk=eaaf33ae234217c783d8e1c21eb6e1b1b4534171a0aa8befa386b2d55a84bac0
 }
 EOF
 
@@ -300,11 +273,11 @@ if $INSTALL_WIFI_DONGLE; then
       sudo ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
       if ! grep -q wlan1 /etc/network/interfaces; then
-	  echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces 1>/dev/null
+          echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces 1>/dev/null
       fi
 
       if ! egrep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
-	  echo "$wifi_sysctl_config" | sudo tee -a /etc/sysctl.conf >/dev/null
+          echo "$wifi_sysctl_config" | sudo tee -a /etc/sysctl.conf >/dev/null
       fi
 
       echo "$wifi_hostapd_config" | sudo tee /etc/hostapd/hostapd.conf >/dev/null
@@ -318,32 +291,32 @@ if $INSTALL_WIFI_DONGLE; then
       echo ""
 
       if [ ! -e /etc/dnsmasq.conf.dist ]; then
-      	  sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
-      	  echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
-      	  sudo touch /etc/hosts.dnsmasq
+          sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.dist &&
+          echo "$wifi_dnsmasq_config" | sudo tee /etc/dnsmasq.conf &&
+          sudo touch /etc/hosts.dnsmasq
       fi
 
       if [ ! -e /etc/systemd/system/dnsmasq.service ]; then
-	  sudo cp -p /lib/systemd/system/dnsmasq.service /etc/systemd/system/dnsmasq.service
-	  sudo sed -i~ '/^Requires=network.target/a After=network-online.target\nWants=network-online.target' /etc/systemd/system/dnsmasq.service
+          sudo cp -p /lib/systemd/system/dnsmasq.service /etc/systemd/system/dnsmasq.service
+          sudo sed -i~ '/^Requires=network.target/a After=network-online.target\nWants=network-online.target' /etc/systemd/system/dnsmasq.service
       fi
 
       if ! egrep -q wlan1 /etc/rc.local; then
-	  if [[ $(tail -1 /etc/rc.local) = "exit 0" ]]; then
-	      NEW_RC_LOCAL="$(head -n -1 /etc/rc.local; cat wifi_rclocal_config.txt; echo ''; echo 'exit 0')"
-	      echo "$NEW_RC_LOCAL" | sudo tee /etc/rc.local >/dev/null
-	  else
-	      echo "Error: /etc/rc.local doesn't end with 'exit 0' line"
-	  fi
+          if [[ $(tail -1 /etc/rc.local) = "exit 0" ]]; then
+              NEW_RC_LOCAL="$(head -n -1 /etc/rc.local; cat wifi_rclocal_config.txt; echo ''; echo 'exit 0')"
+              echo "$NEW_RC_LOCAL" | sudo tee /etc/rc.local >/dev/null
+          else
+              echo "Error: /etc/rc.local doesn't end with 'exit 0' line"
+          fi
       fi
 
       if ! grep -q "nameserver 8.8.8.8" /etc/resolvconf/resolv.conf.d/head; then
-	  echo "adding google nameservers to head of default resolv.conf file"
-	  echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
-	  echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
+          echo "adding google nameservers to head of default resolv.conf file"
+          echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
+          echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
       fi
       if ! egrep -q wlan1 /etc/default/ifplugd; then
-	  sudo sed -i~ 's/INTERFACES=""/INTERFACES="wlan1"/' /etc/default/ifplugd
+          sudo sed -i~ 's/INTERFACES=""/INTERFACES="wlan1"/' /etc/default/ifplugd
       fi
 
       echo "configuring wpa_supplicant"
@@ -356,10 +329,10 @@ if $INSTALL_WIFI_DONGLE; then
       sudo systemctl enable wpa_supplicant.service
 
       if [ ! -e /usr/local/jibo-station-wifi-service ]; then
-	  sudo mkdir /usr/local/jibo-station-wifi-service
-	  sudo chown prg /usr/local/jibo-station-wifi-service
-	  git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
-	  (cd /usr/local/jibo-station-wifi-service && JSWS_NO_REBOOT_PROMPT=1 ./install.sh)
+          sudo mkdir /usr/local/jibo-station-wifi-service
+          sudo chown prg /usr/local/jibo-station-wifi-service
+          git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
+          (cd /usr/local/jibo-station-wifi-service && JSWS_NO_REBOOT_PROMPT=1 ./install.sh)
       fi
 
       # disable Network Manager
@@ -369,19 +342,6 @@ if $INSTALL_WIFI_DONGLE; then
          sudo systemctl disable $f
       done
 fi
-
-
-read -p "S02 NUC setup finished. Reboot? [y/n] " yn
-case $yn in
-    ""|[yY]|yes|Yes|YES )
-	sudo reboot
-	;;
-    * )
-	echo "not rebooting"
-	;;
-esac
-
-exit
 
 
 echo
@@ -411,3 +371,17 @@ echo "RemotePC password is copied to clipboard for your convenience."
 echo "u8sv5R&K8n4q" | xclip -selection c
 
 read -n 1 -r -s -p $'When done, press any key to continue...\n\n'
+
+read -p "S06 NUC setup finished. Reboot? [y/n] " yn
+case $yn in
+    ""|[yY]|yes|Yes|YES )
+        sudo reboot
+        ;;
+    * )
+        echo "not rebooting"
+        ;;
+esac
+
+
+echo "All finished!"
+exit
