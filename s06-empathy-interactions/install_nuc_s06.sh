@@ -6,6 +6,10 @@ N='\033[0m'
 source s06-empathy-interactions/s06-machine-commands.sh
 
 ROOT_DIR=$PWD
+if [[ ! -e ./rc-local.service ]]; then
+    echo "run this in the top directory of the checked-out prg-s02-system-setup repo"
+    exit 1
+fi
 
 echo
 echo -e "${G}Set user to execute sudo commands without password${N}"
@@ -89,7 +93,7 @@ sudo apt-get update &&
 
 echo
 echo -e "${G}install packages${N}"
-sudo apt-get -y install vim-gnome apt-transport-https ca-certificates curl gnupg-agent software-properties-common xclip hostapd haveged dnsmasq cmtest make &&
+sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip wget lsb-release libminizip1 libxcb-xinerama0 emacs-nox htop cmtest make &&
 
 echo
 echo -e "${G}Install openssh-server${N}"
@@ -116,14 +120,13 @@ echo "OK"
 # Docker setup
 echo
 echo -e "${G}Add Docker's official GPG key${N}"
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - &&
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg &&
 
 echo
 echo -e "${G}Setup Docker stable repository${N}"
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable" &&
+echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null &&
 
 echo
 echo -e "${G}apt-get update${N}"
