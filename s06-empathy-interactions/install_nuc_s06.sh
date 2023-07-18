@@ -146,7 +146,8 @@ sudo chown prg:prg /home/prg/.docker -R &&
 sudo chmod g+rwx "/home/prg/.docker" -R &&
 echo "OK"
 
-echo -e "Fix create 'New Document' right click menu"
+echo
+echo -e "${G}Fix create 'New Document' right click menu${N}"
 touch ~/Templates/"New Document"
 
 echo
