@@ -53,6 +53,16 @@
     - VPN: [http://rover.jibo.media.mit.edu:1967](http://rover.jibo.media.mit.edu:1967)
     - Docker Swarm: [http://prg-webhost.media.mit.edu:8889](http://prg-webhost.media.mit.edu:8889)
     - RemotePC and Teamviewer
+  
+10. Labeling study for docker swarm
+    - `ssh <kerberos>@buildroot.media.mit.edu`
+    - `sudo docker node ls`
+    - Grab unique identifier for machine
+    - `docker node inspect <identifier>`
+    - `docker node update --label-add study=s06 <identifier>`
+    - Removing label: `docker node update --label-rm study=s06`
+
+
 
 ## == Full Manual Installation Guide ==
 
