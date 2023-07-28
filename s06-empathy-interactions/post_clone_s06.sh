@@ -10,7 +10,7 @@ fi
 
 # change hostname
 echo -e "${G}Updating Hostname${N}"
-default_hn="s02-n00-nuc-xxx"
+default_hn="s06-n00-nuc-xxx"
 target_hn=$1
 
 echo $default_hn
@@ -81,12 +81,13 @@ sudo docker swarm join --token $SWARM_TOKEN
 # xdg-open $SHEET_URL 2>/dev/null
 
 echo
-echo "Done. Now run 'remotepc &' and 'sudo teamviewer setup' on another terminal. After logging in the first time, you need to check email and verify new device."
+echo "Done. Now run 'remotepc &' and 'sudo teamviewer setup' on another terminal."
 
 echo
-echo "RemotePC and TeamViewer logins are in LastPass."
-echo "RemotePC password is copied to clipboard for your convenience."
-echo "u8sv5R&K8n4q" | xclip -selection c
+echo "You should already be logged in. If not, RemotePC and TeamViewer logins are in LastPass."
+echo "You will have to manually change the name of the current machine to match its new hostname"
+echo $target_hn
+echo $target_hn | xclip -selection c
 
 read -n 1 -r -s -p $'When done, press any key to continue...\n\n'
 

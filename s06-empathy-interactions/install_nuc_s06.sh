@@ -76,7 +76,7 @@ sudo apt-get update &&
 
 echo
 echo -e "${G}install packages${N}"
-sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip wget lsb-release libminizip1 libxcb-xinerama0 emacs-nox htop make &&
+sudo apt-get -y install build-essential vim-gtk3 apt-transport-https ca-certificates curl gnupg software-properties-common xclip wget lsb-release libminizip1 libxcb-xinerama0 emacs-nox htop make fping tree &&
 
 echo
 echo -e "${G}Install openssh-server${N}"
@@ -93,6 +93,7 @@ fi
 unzip -qq ~/chrome-linux.zip -d ~/ &&
 cp -R -u -p s06-empathy-interactions/JiboChromium_logo.png ~/chrome-linux &&
 cp -R -u -p s06-empathy-interactions/JiboChromium.desktop ~/Desktop &&
+chmod +x ~/Desktop/JiboChromium.desktop
 echo "OK"
 
 echo
@@ -213,12 +214,12 @@ while true; do
 done
 
 read -r -d '' wifi_interfaces_config <<EOF
-auto lo wlan0
-allow-hotplug wlan1
-iface wlan0 inet static
+auto lo wlan1
+allow-hotplug wlan0
+iface wlan1 inet static
 address 10.99.0.1
 netmask 255.255.255.0
-iface wlan1 inet dhcp
+iface wlan0 inet dhcp
 EOF
 
 read -r -d '' wifi_sysctl_config <<EOF
@@ -228,7 +229,7 @@ EOF
 
 read -r -d '' wifi_hostapd_config <<EOF
 country_code=US
-interface=wlan0
+interface=wlan1
 driver=nl80211
 ssid=$HOSTNAME
 hw_mode=g
@@ -244,7 +245,7 @@ rsn_pairwise=CCMP
 EOF
 
 read -r -d '' wifi_dnsmasq_config <<EOF
-interface=wlan0
+interface=wlan1
 bind-interfaces
 except-interface=lo
 dhcp-range=10.99.0.2,10.99.0.20,255.255.255.0,24h
@@ -267,7 +268,7 @@ EOF
 
 if $INSTALL_WIFI_DONGLE; then
       echo "installing additional networking packages"
-      sudo apt install -y net-tools iw ifupdown ifplugd resolvconf hostapd haveged dnsmasq #libhavege2 may not exist?
+      sudo apt install -y net-tools iw ifupdown ifplugd resolvconf hostapd haveged dnsmasq silversearcher-ag
 
       # disable the unique network interface names, go back to wlan0 & wlan1
       echo "disabling complex names"
@@ -316,8 +317,8 @@ if $INSTALL_WIFI_DONGLE; then
           echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
           echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
       fi
-      if ! egrep -q wlan1 /etc/default/ifplugd; then
-          sudo sed -i~ 's/INTERFACES=""/INTERFACES="wlan1"/' /etc/default/ifplugd
+      if ! egrep -q wlan0 /etc/default/ifplugd; then
+          sudo sed -i~ 's/INTERFACES=""/INTERFACES="wlan0"/' /etc/default/ifplugd
       fi
 
       echo "configuring wpa_supplicant"
@@ -335,6 +336,7 @@ if $INSTALL_WIFI_DONGLE; then
           git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
           (cd /usr/local/jibo-station-wifi-service && JSWS_NO_REBOOT_PROMPT=1 ./install.sh)
       fi
+      echo "You will have to manually enter jibo-station-wifi-service and change interface to wlan0 instead of wlan1"
 
       # disable Network Manager
       #systemctl stop NetworkManager  # nah! probably don't wanna do this
