@@ -154,7 +154,7 @@ touch ~/Templates/"New Document"
 echo
 echo -e "${G}Set up ALSA configuration${N}"
 sudo -s <<EOF
-echo "pcm.usbmic1 {
+echo "pcm.usbmic44-1 {
     type dsnoop
     ipc_key 466752
     ipc_perm 0666
@@ -164,11 +164,11 @@ echo "pcm.usbmic1 {
         rate 32000
     }
     hint {
-        description \"LOOPBACK_DEV\"
+        description \"LOOPBACK_DEV_44\"
     }
 }
 
-pcm.usbmic2 {
+pcm.usbmic44-2 {
     type dsnoop
     ipc_key 466752
     ipc_perm 0666
@@ -178,7 +178,35 @@ pcm.usbmic2 {
         rate 32000
     }
     hint {
-        description \"LOOPBACK_DEV_2\"
+        description \"LOOPBACK_DEV_44_2\"
+    }
+}
+
+pcm.usbmic404-1 {
+    type dsnoop
+    ipc_key 485616
+    ipc_perm 0666
+    slave {
+        pcm \"hw:CARD=CODEC,DEV=0\"
+        channels 1
+        rate 32000
+    }
+    hint {
+        description \"LOOPBACK_DEV_404\"
+    }
+}
+
+pcm.usbmic404-2 {
+    type dsnoop
+    ipc_key 485616
+    ipc_perm 0666
+    slave {
+        pcm \"hw:CARD=CODEC,DEV=0\"
+        channels 1
+        rate 32000
+    }
+    hint {
+        description \"LOOPBACK_DEV_404_2\"
     }
 }" > /etc/asound.conf && echo "OK"
 EOF
