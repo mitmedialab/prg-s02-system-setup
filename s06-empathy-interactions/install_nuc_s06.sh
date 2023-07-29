@@ -214,12 +214,12 @@ while true; do
 done
 
 read -r -d '' wifi_interfaces_config <<EOF
-auto lo wlan1
-allow-hotplug wlan0
-iface wlan1 inet static
+auto lo wlan0
+allow-hotplug wlan1
+iface wlan0 inet static
 address 10.99.0.1
 netmask 255.255.255.0
-iface wlan0 inet dhcp
+iface wlan1 inet dhcp
 EOF
 
 read -r -d '' wifi_sysctl_config <<EOF
@@ -229,7 +229,7 @@ EOF
 
 read -r -d '' wifi_hostapd_config <<EOF
 country_code=US
-interface=wlan1
+interface=wlan0
 driver=nl80211
 ssid=$HOSTNAME
 hw_mode=g
@@ -245,7 +245,7 @@ rsn_pairwise=CCMP
 EOF
 
 read -r -d '' wifi_dnsmasq_config <<EOF
-interface=wlan1
+interface=wlan0
 bind-interfaces
 except-interface=lo
 dhcp-range=10.99.0.2,10.99.0.20,255.255.255.0,24h
@@ -274,7 +274,7 @@ if $INSTALL_WIFI_DONGLE; then
       echo "disabling complex names"
       sudo ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
-      if ! grep -q wlan1 /etc/network/interfaces; then
+      if ! grep -q wlan0 /etc/network/interfaces; then
           echo "$wifi_interfaces_config" | sudo tee -a /etc/network/interfaces 1>/dev/null
       fi
 
@@ -303,7 +303,7 @@ if $INSTALL_WIFI_DONGLE; then
           sudo sed -i~ '/^Requires=network.target/a After=network-online.target\nWants=network-online.target' /etc/systemd/system/dnsmasq.service
       fi
 
-      if ! egrep -q wlan1 /etc/rc.local; then
+      if ! egrep -q wlan0 /etc/rc.local; then
           if [[ $(tail -1 /etc/rc.local) = "exit 0" ]]; then
               NEW_RC_LOCAL="$(head -n -1 /etc/rc.local; cat wifi_rclocal_config.txt; echo ''; echo 'exit 0')"
               echo "$NEW_RC_LOCAL" | sudo tee /etc/rc.local >/dev/null
@@ -317,8 +317,8 @@ if $INSTALL_WIFI_DONGLE; then
           echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
           echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolvconf/resolv.conf.d/head >/dev/null
       fi
-      if ! egrep -q wlan0 /etc/default/ifplugd; then
-          sudo sed -i~ 's/INTERFACES=""/INTERFACES="wlan0"/' /etc/default/ifplugd
+      if ! egrep -q wlan1 /etc/default/ifplugd; then
+          sudo sed -i~ 's/INTERFACES=""/INTERFACES="wlan1"/' /etc/default/ifplugd
       fi
 
       echo "configuring wpa_supplicant"
@@ -336,7 +336,7 @@ if $INSTALL_WIFI_DONGLE; then
           git clone https://github.com/mitmedialab/jibo-station-wifi-service /usr/local/jibo-station-wifi-service
           (cd /usr/local/jibo-station-wifi-service && JSWS_NO_REBOOT_PROMPT=1 ./install.sh)
       fi
-      echo "You will have to manually enter jibo-station-wifi-service and change interface to wlan0 instead of wlan1"
+      #echo "You will have to manually enter jibo-station-wifi-service and change interface to wlan0 instead of wlan1"
 
       # disable Network Manager
       #systemctl stop NetworkManager  # nah! probably don't wanna do this
