@@ -1,6 +1,6 @@
-iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -o wlan1 -j MASQUERADE
 iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i wlan1 -o wlan0 -j ACCEPT
+iptables -A FORWARD -i wlan0 -o wlan1 -j ACCEPT
 
 if ifconfig -a eno1 >/dev/null 2>&1; then
   ethname="eno1"
@@ -11,4 +11,4 @@ echo "rc.local has decided the ethername interface name is $ethname"
 
 iptables -t nat -A POSTROUTING -o $ethname -j MASQUERADE
 iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i wlan1 -o $ethname -j ACCEPT
+iptables -A FORWARD -i wlan0 -o $ethname -j ACCEPT
