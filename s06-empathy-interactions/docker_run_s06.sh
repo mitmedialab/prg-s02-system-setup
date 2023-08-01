@@ -7,6 +7,14 @@ fi
 
 # Add stuff to script about checking the microphone and setting pacmd set-source-volume to 100%
 
+echo -e "Setting microphone volumes (both AC-44 and AC-404) to 100%"
+echo -e "If you get one 'no such entity' error, this is because both microphones are being configured, but you should only have one plugged in."
+echo -e "You can ignore one 'no such entity error', but not two. If you get two, check to make sure that a microphone is plugged in"
+echo
+pactl set-source-volume "alsa_input.usb-MXL_MXL_AC-44-00.analog-mono" 100%
+pactl set-source-volume "alsa_input.usb-Burr-Brown_from_TI_USB_audio_CODEC-00.analog-mono" 100%
+echo
+
 echo -e "Running microphone container"
 docker run --env-file docker-compose.env -d -it --name=s06-microphone --ipc="host" --device=/dev/snd -v /etc/asound.conf:/etc/asound.conf --restart=always --network=host docker-registry.jibo.media.mit.edu:5000/s06-ros /bin/bash -c "sudo /etc/init.d/alsa-utils restart; sudo chown -R :prg /dev; cd ../asr_assembly/src; python3.8 local_mic_asr.py"
 
