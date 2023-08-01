@@ -243,10 +243,9 @@ The directions will mostly follow this example from clonezilla: [https://clonezi
 10. From the home directory:
 	- chmod +x prg-s02-system-setup/s06-empathy-interactions/docker_run_s06.sh
 	- ./prg-s02-system-setup/s06-empathy-interactions/docker_run_s06.sh
-
 11.  After ssh-ing into builtroot:
 	- sudo docker node ls (figure out the id number of the station you just added)
-	- sudo docker node update --label-add study=s06 idnumber
+     - sudo docker node update --label-add study=s06 idnumber
 
 
 # Android Tablet
