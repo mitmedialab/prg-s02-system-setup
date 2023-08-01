@@ -150,6 +150,113 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
 
 11. For the empathy interaction clones: make sure that the docker-compose.env has been copied into the /home/prg directory
 
+# Audrey's Instructions
+
+
+## CREATING A MODEL NUC
+
+  
+
+1.  Connect NUC
+	- USB with ubuntu18 installer (currently the green alligator drive. Yes, you can and probably should take its head off in order to connect it)
+	-  Monitor, mouse, keyboard
+	- Power cable LAST
+2. Power on NUC (if plugging it in doesn’t automatically power it on)
+3. Setup auto start when power plugged in
+	- Press F2 instantly when powering on to enter BIOS Settings.
+	- After entering BIOS settings, go to advanced > power > after power failure, select ‘power on’ instead of ‘stay off’.
+	- Go to ‘Boot’ and disable ‘Secure Boot’ in UEFI boot option.
+	-  Save and exit with F10.
+4.  Install Ubuntu
+	- When it asks to connect to wifi, connect manually to PRG’s wifi
+	- Follow all default prompts, but when you get to the step where they ask where to install (replace existing installation, install alongside existing, erase disk), choose to erase the disk
+	- When naming
+		- Computer name: s06-n00-nuc-xxx for the model nuc (xxx gets replaced by specific numbers after cloning)
+		- User Name: prg
+		- Select “Login Automatically”
+5. Clone the system setup repo
+	- sudo apt-get update && sudo apt-get upgrade && sudo apt-get install -y git
+	- git clone [https://github.com/mitmedialab/prg-s02-system-setup](https://github.com/mitmedialab/prg-s02-system-setup)
+	- cd prg-s02-system-setup
+	- git checkout s06-empathic-stories
+6.  Run the install scripts
+	- chmod +x s06-empathy-interactions/install_nuc_s06.sh
+	- ./s06-empathy-interactions/install_nuc_s06.sh
+	- Follow all prompts, including when it tells you to plug in a network adapter before wifi setup and when it prompts you to log into remotepc
+7.  From station 165, transfer over the following files
+	- ~/docker-compose.env from the home directory
+	-  ~/.docker/config.json for the docker login (alternatively, if you know the docker login, you can just do that…I just don’t know the login so I always transfer the credential files lol)
+8.  After rebooting, download the docker image manually
+	- docker pull docker-registry.jibo.media.mit.edu:5000/s06-ros
+	- This step will take a literal hour, if not more, so I would just step away when this starts
+10.  At this point, you can create the clone image
+
+## Creating a clone image of a model NUC
+
+The directions will mostly follow this example from clonezilla: [https://clonezilla.org/show-live-doc-content.php?topic=clonezilla-live/doc/01_Save_disk_image](https://clonezilla.org/show-live-doc-content.php?topic=clonezilla-live/doc/01_Save_disk_image)
+
+1. Both of the 32GB flash drives should have 2 partitions: 1 with clonezilla and 1 empty one in which the disk image will get saved (make sure its empty, otherwise, it won’t have enough space for the new clone…clone is ~19 GB)
+    
+2.  Power down ubuntu completely
+	- sudo shutdown now
+    
+4.  Plug in one flash drive before you turn the nuc back on. Press and hold F10 as you turn on the nuc
+    - You may have to manually select the clonezilla USB from the boot menu…usually it’s called “UEFI 5.00 something something: Part 1 something something”
+  
+  6.  From this point on, follow the example instructions
+	  -  Pretty much everything should be the default option except for when they ask you to select the disk. This happens on the screen after you click “ctrl+c” when it’s listing the available devices. You won’t see the USB drive on that ctrl+c screen, but on the next one, the USB drive will likely be called something like “sda1/something something”. It is not either of the nvme0np1 partitions
+  
+8.  After you click through all of the default options, you should see something like this as the last confirmation:
+    
+
+
+
+![](https://lh6.googleusercontent.com/cdlOMhMGCkdW2iC-TCFUlrFWgFu54ORv-HQl_wDYjcMyv10v0kM2P2oN1wX39AO54qA4EFlFY_usTm8UuNRkjb4sj3k8I66qefJE9TTZEWwbHtxsb9ZzG9cYhKGn_MV0X5xyBDlwMH4_ErmILH_5gqA)
+    
+
+  
+
+## Restoring a clone image of a model NUC
+
+The directions will mostly follow this example from clonezilla: [https://clonezilla.org/show-live-doc-content.php?topic=clonezilla-live/doc/02_Restore_disk_image](https://clonezilla.org/show-live-doc-content.php?topic=clonezilla-live/doc/02_Restore_disk_image)
+
+1.  Power down ubuntu (or existing operating system) completely
+    - sudo shutdown now
+    
+
+3.  Plug in one flash drive before you turn the nuc back on. Press and hold F10 as you turn on the nuc
+    
+- You may have to manually select the clonezilla USB from the boot menu…usually it’s called “UEFI 5.00 something something: Part 1 something something”
+    
+
+5.  From this point on, follow the example instructions
+    -   Pretty much everything should be the default option except for when they ask you to select the disk. This happens on the screen after you click “ctrl+c” when it’s listing the available devices. You won’t see the USB drive on that ctrl+c screen, but on the next one, the USB drive will likely be called something like “sda1/something something”. It is not either of the nvme0np1 partitions
+    - When it asks you to select a directory, just select “Done” instead of the image folder listed (even though that will be the default directory). The directory it is asking for is the directory that contains the image folder (which will be the root directory of the USB). It will complain if you select the image folder directly
+    
+6.  After the image clone has been restored, select “poweroff” and after the nuc has completely shut down, remove the clonezilla USB
+    
+7.  Now we are mostly following these directions: [https://github.com/mitmedialab/prg-s02-system-setup#-installation-via-restoring-clone-image-guide-](https://github.com/mitmedialab/prg-s02-system-setup#-installation-via-restoring-clone-image-guide-)
+    
+8.  Connect the WiFi dongle and any external devices and power on the NUC. It should boot into the newly installed clone image
+    
+9.  Post cloning script
+	 -  cd ~/prg-s02-system-setup
+	 - git pull (you should be in the s06-empathic-stories branch)
+	 - chmod +x s06-empathy-interactions/post_clone_s06.sh
+	 - ./s06-empathy-interactions/post_clone_s06.sh <new-hostname, e.g., s02-n00-nuc-101>
+   
+10.  Set up remotepc
+	- You will need to open up remotepc and rename the clone accordingly. It will bring up "this computer" to the top of the remote computer options and you should have the new hostname copied to clipboard at the end of the install script, so just rename "this computer" (current name should be "s06-n00-nuc-xxx_CLONE_bunchofletters") to the new hostname
+    
+
+12.  From the home directory:
+	- chmod +x prg-s02-system-setup/s06-empathy-interactions/docker_run_s06.sh
+	- ./prg-s02-system-setup/s06-empathy-interactions/docker_run_s06.sh
+
+13.  After ssh-ing into builtroot:
+	- sudo docker node ls (figure out the id number of the station you just added)
+	-  sudo docker node update --label-add study=s06 idnumber
+
 
 # Android Tablet
 
