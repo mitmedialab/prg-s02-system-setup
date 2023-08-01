@@ -153,7 +153,8 @@ The following instruction assumes you have a bootable Ubuntu intallation USB thu
 ## Pre-selecting options (unattended)
 * Navigate to and edit your \boot\grub\grub.cfg . Here's an example grub.cfg, but don't overwrite. Edit the existing one on your image. (edited) 
 * find menuentry with --id live-default and replace with the following  to make sure this menuentry is placed as the first one in the list of menuentries.
-```menuentry "Hae Won's S02 Recipe with img nuc10-2022-06-14-15-img (VGA 800x600)" --id live-default {
+```
+menuentry "Hae Won's S02 Recipe with img nuc10-2022-06-14-15-img (VGA 800x600)" --id live-default {
   search --set -f /live/vmlinuz
   $linux_cmd /live/vmlinuz boot=live union=overlay username=user config components  noswap edd=on nomodeset enforcing=0 noeject locales=en_US.UTF-8 keyboard-layouts=NONE ocs_live_run="ocs-live-restore" ocs_live_extra_param="-g auto -e1 auto -e2 -r -j2 -ps -k0 -p poweroff restoredisk nuc10-2022-06-14-15-img nvme0n1" ocs_live_batch="yes" vga=788 ip= net.ifnames=0 quiet nosplash i915.blacklist=yes radeonhd.blacklist=yes nouveau.blacklist=yes vmwgfx.enable_fbdev=1
   $initrd_cmd /live/initrd.img
