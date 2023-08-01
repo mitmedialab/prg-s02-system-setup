@@ -17,7 +17,7 @@ sudo grep -qxF "$line" /etc/sudoers || sudo sed -i '27i '"$line"'' /etc/sudoers 
 echo "OK"
 
 
-SWARM_TOKEN="SWMTKN-1-4qtr77cbney2t4f81rj7qlz61fq78l4wyv3infn4d5lz1ct1g1-4ryfnlja84ovm2da412rk0xe2 18.27.79.165:2377"  # buildroot.media.mit.edu
+SWARM_TOKEN="SWMTKN-1-3zc9c3xnf20ue7mgkhu8then3lf0kdhdg27i7qk7naurrjnlvv-8k38rf1t1oiwo30lhx1rpcuq5 18.27.79.165:2377"  # buildroot.media.mit.edu
 
 echo
 echo -e "${G}Setup rc.local${N}"
