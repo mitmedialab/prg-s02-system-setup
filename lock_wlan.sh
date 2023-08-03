@@ -5,6 +5,7 @@ if [[ $EUID != 0 ]]; then
     exit 1
 fi
 
+# https://serverfault.com/questions/601483/how-to-write-rules-for-persistent-net-names
 NET_RULES_FILE="/etc/udev/rules.d/70-persistent-net.rules"
 
 nuc_model=`dmesg | egrep "Intel.*NUC" | cut -d: -f2 | cut -d, -f1`
