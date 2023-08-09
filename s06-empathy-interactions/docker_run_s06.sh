@@ -31,7 +31,7 @@ if ! egrep -q docker_run_s06.sh /etc/rc.local; then
         sudo -s <<EOF
         sed '$d' /etc/rc.local
         echo "(cd ~; ./prg-s02-system-setup/s06-empathy-interactions/docker_run_s06.sh)
-        exit 0" > /etc/rc.local
+        exit 0" >> /etc/rc.local
 EOF
     else
         echo "Error: /etc/rc.local doesn't end with 'exit 0' line"
