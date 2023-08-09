@@ -18,7 +18,7 @@ echo
 echo -e "Clearing old device containers"
 echo -e "You can ignore any errors; it just means that the containers weren't running already"
 docker stop s06-microphone s06-camera
-docker container prune --force --filter "label=device_container"
+docker container prune --force
 
 echo -e "Running microphone container"
 docker run --env-file docker-compose.env -d -it --name=s06-microphone --label="device_container" --ipc="host" --device=/dev/snd -v /etc/asound.conf:/etc/asound.conf --restart=always --network=host docker-registry.jibo.media.mit.edu:5000/s06-ros /bin/bash -c "sudo /etc/init.d/alsa-utils restart; sudo chown -R :prg /dev; cd ../asr_assembly/src; python3.8 local_mic_asr.py"
