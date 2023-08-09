@@ -28,8 +28,8 @@ docker run --env-file docker-compose.env -d -it --name=s06-camera --label="devic
 
 if ! egrep -q docker_run_s06.sh /etc/rc.local; then
     if [[ $(tail -1 /etc/rc.local) = "exit 0" ]]; then
-        sudo -s <<EOF
-        sed '$d' /etc/rc.local
+        sudo su <<EOF
+        sed -i '$d' /etc/rc.local &&
         echo "(cd ~; ./prg-s02-system-setup/s06-empathy-interactions/docker_run_s06.sh)
         exit 0" >> /etc/rc.local
 EOF
