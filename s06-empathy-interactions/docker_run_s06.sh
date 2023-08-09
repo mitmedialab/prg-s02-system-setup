@@ -15,8 +15,13 @@ pactl set-source-volume "alsa_input.usb-MXL_MXL_AC-44-00.analog-mono" 100%
 pactl set-source-volume "alsa_input.usb-Burr-Brown_from_TI_USB_audio_CODEC-00.analog-mono" 100%
 echo
 
+echo -e "Clearing old device containers"
+echo -e "You can ignore any errors; it just means that the containers weren't running already"
+docker stop s06-microphone s06-camera
+docker container prune --force --filter "label=device_container"
+
 echo -e "Running microphone container"
-docker run --env-file docker-compose.env -d -it --name=s06-microphone --ipc="host" --device=/dev/snd -v /etc/asound.conf:/etc/asound.conf --restart=always --network=host docker-registry.jibo.media.mit.edu:5000/s06-ros /bin/bash -c "sudo /etc/init.d/alsa-utils restart; sudo chown -R :prg /dev; cd ../asr_assembly/src; python3.8 local_mic_asr.py"
+docker run --env-file docker-compose.env -d -it --name=s06-microphone --label="device_container" --ipc="host" --device=/dev/snd -v /etc/asound.conf:/etc/asound.conf --restart=always --network=host docker-registry.jibo.media.mit.edu:5000/s06-ros /bin/bash -c "sudo /etc/init.d/alsa-utils restart; sudo chown -R :prg /dev; cd ../asr_assembly/src; python3.8 local_mic_asr.py"
 
 echo -e "Running USB camera container"
-docker run --env-file docker-compose.env -d -it --name=s06-camera --ipc="host" --device=/dev/snd --device=/dev/video0 -v /etc/asound.conf:/etc/asound.conf -v /home/prg/s06-empathy-interaction/empathy_videos:/home/prg/s06-empathy-interaction/empathy_videos --restart=always --network=host docker-registry.jibo.media.mit.edu:5000/s06-ros /bin/bash -c "sudo /etc/init.d/alsa-utils restart; sudo chown -R :prg /dev; sudo chown -R :prg /home/prg/s06-empathy-interaction; cd ../usb_cam; python3.8 usb_cam_cmd.py"
+docker run --env-file docker-compose.env -d -it --name=s06-camera --label="device_container" --ipc="host" --device=/dev/snd --device=/dev/video0 -v /etc/asound.conf:/etc/asound.conf -v /home/prg/s06-empathy-interaction/empathy_videos:/home/prg/s06-empathy-interaction/empathy_videos --restart=always --network=host docker-registry.jibo.media.mit.edu:5000/s06-ros /bin/bash -c "sudo /etc/init.d/alsa-utils restart; sudo chown -R :prg /dev; sudo chown -R :prg /home/prg/s06-empathy-interaction; cd ../usb_cam; python3.8 usb_cam_cmd.py"
