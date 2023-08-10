@@ -36,3 +36,5 @@ if ! egrep -q docker_run_s06.sh /etc/rc.local; then
         echo "Error: /etc/rc.local doesn't end with 'exit 0' line"
     fi
 fi
+
+docker image prune --force
