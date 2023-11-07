@@ -13,12 +13,12 @@ if $INSTALL_MICROPHONE_CONTAINER; then
 	
 	echo
 	echo -e "${G}Run MICROPHONE_LAUNCHER Docker Container${N}"
-	ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/python38:nov06 --format "{{.ID}}"`
+	ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/python38 --format "{{.ID}}"`
 	ROS_IMAGE_ID=`echo $ROS_IMAGE_ID | awk '{print $1}'`
 	while [ -z "$ROS_IMAGE_ID" ]; do
 		echo "Waiting for docker image to finish download..."
   		sleep 10s
-  		ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/python38:nov06 --format "{{.ID}}"`
+  		ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/python38 --format "{{.ID}}"`
   		ROS_IMAGE_ID=`echo $ROS_IMAGE_ID | awk '{print $1}'`
 	done
 	echo $ROS_IMAGE_ID
