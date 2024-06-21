@@ -13,19 +13,19 @@ if $INSTALL_MICROPHONE_CONTAINER; then
 	
 	echo
 	echo -e "${G}Run MICROPHONE_LAUNCHER Docker Container${N}"
-	ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/python38 --format "{{.ID}}"`
+	ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
 	ROS_IMAGE_ID=`echo $ROS_IMAGE_ID | awk '{print $1}'`
 	while [ -z "$ROS_IMAGE_ID" ]; do
 		echo "Waiting for docker image to finish download..."
   		sleep 10s
-  		ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/python38 --format "{{.ID}}"`
+  		ROS_IMAGE_ID=`sudo docker images --filter=reference=docker-registry.jibo.media.mit.edu:5000/mitprg/ros-bundle --format "{{.ID}}"`
   		ROS_IMAGE_ID=`echo $ROS_IMAGE_ID | awk '{print $1}'`
 	done
 	echo $ROS_IMAGE_ID
 
 	#sudo docker run -d -it --name=s02-ros_microphone-launcher --network=host --restart=always --workdir=/root/projects --device=/dev/snd:/dev/snd \
 	#--volume=/home/prg/rosbags:/root/projects/rosbags $ROS_IMAGE_ID python3.8 -m s02-launch-scripts.scripts.start_asr_launcher 
-	sudo docker run -d -it --name=s02-ros_microphone-launcher --network=host --restart=always --workdir=/root/projects --device=/dev/snd:/dev/snd \
+	sudo docker run -d --name=s02-ros_microphone-launcher --network=host --restart=always --workdir=/root/projects --device=/dev/snd:/dev/snd --volume=/etc/asound.conf:/etc/asound.conf \
         --volume=/home/prg/rosbags:/root/rosbags $ROS_IMAGE_ID python3.8 -m s02-launch-scripts.scripts.start_asr_launcher
 fi
 
