@@ -13,5 +13,5 @@ done
 if $INSTALL_DATA_TARDIS_CONTAINER; then
     docker rm -f $CONTAINER_NAME
     docker pull "$IMAGE_NAME"
-    docker run -d --restart=unless-stopped --name="$CONTAINER_NAME" -p 1963:1963 --privileged -v /dev:/dev --env ETCO_synology_password="9^jvH%5cU6#E" --env HOST_HOSTNAME="`hostname`" --env ETCO_delete_after_upload=1 --mount type=bind,source=/media,target=/media,bind-propagation=shared "$IMAGE_NAME"
+    docker run -d --restart=unless-stopped --name="$CONTAINER_NAME" -p 1963:1963 --privileged -v /home/prg/rosbags/data-tardis:/data/tardis -v /dev:/dev --env ETCO_synology_password="9^jvH%5cU6#E" --env HOST_HOSTNAME="`hostname`" --env ETCO_delete_after_upload=1 --mount type=bind,source=/media,target=/media,bind-propagation=shared "$IMAGE_NAME"
 fi
