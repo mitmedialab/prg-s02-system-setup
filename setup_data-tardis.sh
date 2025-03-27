@@ -1,6 +1,8 @@
 CONTAINER_NAME="data-tardis"
 IMAGE_NAME="docker-registry.jibo.media.mit.edu:5000/mitprg/prg-data-tardis:20250327"
 
+set -x
+
 if [[ -z $INSTALL_DATA_TARDIS_CONTAINER ]]; then
     while true; do
         read -p "Proceed with setting up data-tardis docker container? [Y/n]: " yn
