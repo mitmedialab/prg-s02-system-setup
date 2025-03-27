@@ -1,15 +1,17 @@
 CONTAINER_NAME="data-tardis"
 IMAGE_NAME="docker-registry.jibo.media.mit.edu:5000/mitprg/prg-data-tardis:20250327"
 
-while true; do
-    read -p "Proceed with setting up data-tardis docker container? [Y/n]: " yn
-    case $yn in
-        [Nn]* ) INSTALL=false; echo "Please run ./setup_data-tardis.sh later"; break;;
-        [Yy]*|"" ) echo "Okay, setting up data-tardis docker container."; break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
-
+if [[ -z $NO_PROMPTING ]]; then
+    while true; do
+        read -p "Proceed with setting up data-tardis docker container? [Y/n]: " yn
+        case $yn in
+            [Nn]* ) INSTALL=false; echo "Please run ./setup_data-tardis.sh later"; break;;
+            [Yy]*|"" ) echo "Okay, setting up data-tardis docker container."; break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+fi
+    
 if $INSTALL_DATA_TARDIS_CONTAINER; then
     docker rm -f $CONTAINER_NAME
     docker pull "$IMAGE_NAME"
