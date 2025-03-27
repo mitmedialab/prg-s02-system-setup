@@ -1,5 +1,5 @@
 CONTAINER_NAME="data-tardis"
-IMAGE_NAME="docker-registry.jibo.media.mit.edu:5000/mitprg/prg-data-tardis:20250321"
+IMAGE_NAME="docker-registry.jibo.media.mit.edu:5000/mitprg/prg-data-tardis:20250327"
 
 while true; do
     read -p "Proceed with setting up data-tardis docker container? [Y/n]: " yn
